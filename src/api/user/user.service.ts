@@ -10,7 +10,7 @@ export class UserService {
   private readonly repository: Repository<User>;
 
   public getById(id: number): Promise<User> {
-    return this.repository.findOne({ where: { id }});
+    return this.repository.findOne({ where: { id } });
   }
 
   public create(body: CreateUserDto): Promise<User> {
@@ -19,9 +19,6 @@ export class UserService {
     user.username = body.username;
     user.email = body.email;
     user.userImage = body.userImage;
-
-    const currentDate = new Date();
-    user.createdAt = currentDate.toISOString();
 
     return this.repository.save(user);
   }

@@ -1,25 +1,44 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from 'src/api/comment/entities/comment.entity';
+import { Community } from 'src/api/community/entities/community.entity';
+import { User } from 'src/api/user/entities/user.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
 @Entity()
 export class Post {
-    @PrimaryGeneratedColumn()
-    id: number
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    userId: number
+  @Column()
+  header: string;
 
-    @Column()
-    communityId: number
+  @Column()
+  image: string;
 
-    @Column()
-    header: string
+  @Column()
+  textContent: string;
 
-    @Column()
-    image: string
+  @ManyToOne(() => User, (user) => user.posts)
+  user: User;
 
-    @Column()
-    textContent: string
+  @ManyToOne(() => Community, (community) => community.posts)
+  community: Community;
 
-    @Column({ type: "timestamptz" })
-    createdAt: Date
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
+
+  // Create/Update time
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updateAt: Date;
 }
