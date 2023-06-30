@@ -3,7 +3,7 @@ import { CreateUserDto } from './user.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   @Inject(UserService)
   private readonly service: UserService;
@@ -11,6 +11,11 @@ export class UserController {
   @Get(':id')
   public getUser(@Param('id', ParseIntPipe) id: number): Promise<User> {
     return this.service.getById(id);
+  }
+
+  @Get()
+  public getAllUsers() {
+    return this.service.getAll();
   }
 
   @Post()

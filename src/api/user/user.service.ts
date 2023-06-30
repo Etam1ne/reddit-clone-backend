@@ -20,6 +20,13 @@ export class UserService {
     user.email = body.email;
     user.userImage = body.userImage;
 
+    const currentDate = new Date();
+    user.createdAt = currentDate.toISOString();
+
     return this.repository.save(user);
+  }
+
+  public getAll(): Promise<User[]> {
+    return this.repository.find();
   }
 }

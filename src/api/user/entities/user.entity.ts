@@ -15,5 +15,5 @@ export class User {
     userImage: string
 
     @Column({ type: "timestamptz" })
-    createdAt: Date
+    createdAt: string
 }
