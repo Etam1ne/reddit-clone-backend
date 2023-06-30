@@ -1,22 +1,19 @@
 import { Entity, Column, Timestamp, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Comment {
+export class Community {
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    postId: number
+    name: string
 
     @Column()
-    parentCommentId: number
+    description: string
 
     @Column()
-    userId: number
+    image: string
 
-    @Column()
-    votes: number
-
-    @Column()
-    createdAt: Timestamp
+    @Column({ type: "timestamptz" })
+    createdAt: Date
 }

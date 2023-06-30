@@ -20,6 +20,6 @@ export class Post {
     @Column()
     textContent: string
 
-    @Column({ type: "timestamptz"})
+    @Column({ type: "timestamptz" })
     createdAt: Date
 }
