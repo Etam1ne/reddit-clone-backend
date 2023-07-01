@@ -1,5 +1,5 @@
-import { Post } from 'src/api/post/entities/post.entity';
-import { User } from 'src/api/user/entities/user.entity';
+import { Post } from 'src/post/post.entity';
+import { User } from 'src/user/user.entity';
 import {
   Entity,
   Column,

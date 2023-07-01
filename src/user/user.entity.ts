@@ -1,4 +1,4 @@
-import { Comment } from 'src/api/comment/entities/comment.entity';
+import { Comment } from 'src/comment/comment.entity';
 import {
   Entity,
   Column,
@@ -7,10 +7,10 @@ import {
   UpdateDateColumn,
   OneToMany,
   ManyToMany,
+  JoinTable,
 } from 'typeorm';
-import { Subscription } from './subscription.entity';
-import { Post } from 'src/api/post/entities/post.entity';
-import { Community } from 'src/api/community/entities/community.entity';
+import { Post } from 'src/post/post.entity';
+import { Community } from 'src/community/community.entity';
 
 @Entity('users')
 export class User {
@@ -33,6 +33,7 @@ export class User {
   posts: Post[];
 
   @ManyToMany(() => Community, (community) => community.users)
+  @JoinTable({ name: 'user-community' })
   communities: Community[];
 
   // Create/Update time

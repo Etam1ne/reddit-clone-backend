@@ -1,6 +1,6 @@
-import { Comment } from 'src/api/comment/entities/comment.entity';
-import { Community } from 'src/api/community/entities/community.entity';
-import { User } from 'src/api/user/entities/user.entity';
+import { Comment } from 'src/comment/comment.entity';
+import { Community } from 'src/community/community.entity';
+import { User } from 'src/user/user.entity';
 import {
   Entity,
   Column,
