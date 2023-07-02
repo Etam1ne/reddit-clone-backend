@@ -24,7 +24,7 @@ export class User {
   email: string;
 
   @Column()
-  userImage: string;
+  password: string;
 
   @OneToMany(() => Comment, (category) => category.user)
   comments: Comment[];

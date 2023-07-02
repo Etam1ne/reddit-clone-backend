@@ -3,7 +3,6 @@ import { User } from 'src/user/user.entity';
 import {
   Entity,
   Column,
-  Timestamp,
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,

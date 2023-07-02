@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './user.dto';
 import { User } from './user.entity';
+import { hash } from "bcrypt";
 
 @Injectable()
 export class UserService {
@@ -13,12 +14,17 @@ export class UserService {
     return this.repository.findOne({ where: { id } });
   }
 
-  public create(body: CreateUserDto): Promise<User> {
+  public getByEmail(email: string): Promise<User> {
+    return this.repository.findOne({where: { email }});
+  }
+
+  public async create(body: CreateUserDto): Promise<User> {
     const user: User = new User();
 
     user.username = body.username;
     user.email = body.email;
-    user.userImage = body.userImage;
+
+    user.password = await hash(body.password, 5);
 
     return this.repository.save(user);
   }

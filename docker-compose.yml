@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  app:
+  nest:
     container_name: app
     build:
       context: .
@@ -19,7 +19,7 @@ services:
     container_name: postgres
     image: postgres:latest
     env_file:
-      - /src/common/envs/.development.env
+      - .env
     environment:
       PG_DATA: /var/lib/postgresql/data
     ports:
@@ -30,3 +30,4 @@ services:
 
 volumes:
   pgdata:
+    name: pgdata
