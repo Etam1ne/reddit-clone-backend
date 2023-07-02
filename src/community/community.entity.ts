@@ -13,22 +13,22 @@ import {
 @Entity()
 export class Community {
   @PrimaryGeneratedColumn()
-  id: number;
+  communityId: number;
 
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   image: string;
 
   @OneToMany(() => Post, (post) => post.community)
   posts: Post[];
 
-  @ManyToMany(() => User, (user) => user.communities)
-  users: User[];
+  @ManyToMany(() => User, (user) => user.followedCommunities)
+  followers: User[];
 
   // Create/Update time
 

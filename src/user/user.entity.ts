@@ -15,7 +15,7 @@ import { Community } from 'src/community/community.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  userId: number;
 
   @Column()
   username: string;
@@ -32,9 +32,9 @@ export class User {
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
-  @ManyToMany(() => Community, (community) => community.users)
+  @ManyToMany(() => Community, (community) => community.followers)
   @JoinTable({ name: 'user-community' })
-  communities: Community[];
+  followedCommunities: Community[];
 
   // Create/Update time
 

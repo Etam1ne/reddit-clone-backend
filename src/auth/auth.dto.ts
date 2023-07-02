@@ -8,7 +8,7 @@ export class SignInDto {
   public password: string;
 }
 
-export class SignUpDto extends SignInDto{
+export class SignUpDto extends SignInDto {
   @IsString()
   public username: string;
 }
