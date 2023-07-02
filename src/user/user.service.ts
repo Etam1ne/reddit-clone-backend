@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { hash } from 'bcrypt';
 import { Community } from 'src/community/community.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Post } from 'src/post/post.entity';
 
 @Injectable()
 export class UserService {
@@ -72,9 +73,26 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException('Community not found');
+      throw new NotFoundException('User not found');
     }
 
     return user.followedCommunities;
+  }
+
+  public async getPosts(userId: number): Promise<Post[]> {
+    const user = await this.userRepository.findOne({
+      where: { userId },
+      relations: ['posts'],
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user.posts;
+  }
+
+  public delete(userId): Promise<DeleteResult> {
+    return this.userRepository.delete(userId);
   }
 }

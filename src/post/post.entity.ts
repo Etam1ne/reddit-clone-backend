@@ -14,12 +14,12 @@ import {
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
-  id: number;
+  postId: number;
 
   @Column()
   header: string;
 
-  @Column()
+  @Column({ nullable: true })
   image: string;
 
   @Column()

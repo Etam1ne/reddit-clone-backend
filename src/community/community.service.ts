@@ -4,6 +4,7 @@ import { Community } from './community.entity';
 import { Repository } from 'typeorm';
 import { CreateCommunityDto, UpdateCommunityDto } from './community.dto';
 import { User } from 'src/user/user.entity';
+import { Post } from 'src/post/post.entity';
 
 @Injectable()
 export class CommunityService {
@@ -46,5 +47,18 @@ export class CommunityService {
     }
 
     return community.followers;
+  }
+
+  public async getPosts(communityId: number): Promise<Post[]> {
+    const community = await this.repository.findOne({
+      where: { communityId },
+      relations: ['posts'],
+    });
+
+    if (!community) {
+      throw new NotFoundException('Community not found');
+    }
+
+    return community.posts;
   }
 }

@@ -1,8 +1,8 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
-  Inject,
   Param,
   ParseIntPipe,
   Post,
@@ -10,14 +10,16 @@ import {
 import { CreateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
+import { DeleteResult } from 'typeorm';
+import { Community } from 'src/community/community.entity';
+import { Post as UsersPost } from 'src/post/post.entity';
 
 @Controller('users')
 export class UserController {
-  @Inject(UserService)
-  private readonly service: UserService;
+  constructor(private readonly service: UserService) {}
 
   @Get()
-  public getAll() {
+  public getAll(): Promise<User[]> {
     return this.service.getAll();
   }
 
@@ -27,8 +29,17 @@ export class UserController {
   }
 
   @Get(':userId/followedCommunities')
-  public getFollowedCommunities(@Param('userId', ParseIntPipe) userId: number) {
+  public getFollowedCommunities(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<Community[]> {
     return this.service.getFollowedCommunities(userId);
+  }
+
+  @Get(':userId/posts')
+  public getPosts(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<UsersPost[]> {
+    return this.getPosts(userId);
   }
 
   @Post()
@@ -40,7 +51,14 @@ export class UserController {
   public followCommunity(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('communityId', ParseIntPipe) communityId: number,
-  ) {
+  ): Promise<User> {
     return this.service.followCommunity(userId, communityId);
+  }
+
+  @Delete(':userId')
+  public delete(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<DeleteResult> {
+    return this.service.delete(userId);
   }
 }
