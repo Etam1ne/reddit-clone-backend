@@ -13,7 +13,13 @@ import {
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()
-  id: number;
+  commentId: number;
+
+  @Column()
+  content: string;
+
+  @Column()
+  votes: number;
 
   @ManyToOne(() => Post, (post) => post.comments)
   post: Post;
@@ -21,14 +27,11 @@ export class Comment {
   @ManyToOne(() => User, (user) => user.comments)
   user: User;
 
-  @ManyToOne(() => Comment, (comment) => comment.childComment)
+  @ManyToOne(() => Comment, (comment) => comment.childComments)
   parentComment: Comment;
 
   @OneToMany(() => Comment, (comment) => comment.parentComment)
-  childComment: Comment[];
-
-  @Column()
-  votes: number;
+  childComments: Comment[];
 
   // Create/Update time
 

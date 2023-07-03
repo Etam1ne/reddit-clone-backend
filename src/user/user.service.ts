@@ -40,7 +40,7 @@ export class UserService {
     userId: number,
     updateUserDto: UpdateUserDto,
   ): Promise<User> {
-    this.userRepository.update(userId, updateUserDto);
+    await this.userRepository.update(userId, updateUserDto);
 
     return this.userRepository.findOne({ where: { userId } });
   }
@@ -53,7 +53,10 @@ export class UserService {
     userId: number,
     communityId: number,
   ): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { userId } });
+    const user = await this.userRepository.findOne({
+      where: { userId },
+      relations: ['followedCommunities'],
+    });
     const community = await this.communityRepository.findOne({
       where: { communityId },
     });

@@ -10,7 +10,7 @@ import {
 import { CreatePostDto, UpdatePostDto } from './post.dto';
 import { PostService } from './post.service';
 
-@Controller('post')
+@Controller('posts')
 export class PostController {
   constructor(private readonly service: PostService) {}
 
@@ -20,19 +20,19 @@ export class PostController {
     @Param('userId', ParseIntPipe) userId: number,
     @Body() createPostDto: CreatePostDto,
   ) {
-    this.service.create(communityId, userId, createPostDto);
+    return this.service.create(communityId, userId, createPostDto);
   }
 
-  @Put('postId')
+  @Put(':postId')
   public update(
-    @Param(':postId', ParseIntPipe) postId: number,
+    @Param('postId', ParseIntPipe) postId: number,
     @Body() updatePostDto: UpdatePostDto,
   ) {
-    this.service.update(postId, updatePostDto);
+    return this.service.update(postId, updatePostDto);
   }
 
   @Delete(':postId')
-  public delete(@Param(':postId', ParseIntPipe) postId: number) {
-    this.service.delete(postId);
+  public delete(@Param('postId', ParseIntPipe) postId: number) {
+    return this.service.delete(postId);
   }
 }

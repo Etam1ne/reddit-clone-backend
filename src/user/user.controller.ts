@@ -6,8 +6,9 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
 } from '@nestjs/common';
-import { CreateUserDto } from './user.dto';
+import { CreateUserDto, UpdateUserDto } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 import { DeleteResult } from 'typeorm';
@@ -17,6 +18,19 @@ import { Post as UsersPost } from 'src/post/post.entity';
 @Controller('users')
 export class UserController {
   constructor(private readonly service: UserService) {}
+
+  @Post()
+  public create(@Body() body: CreateUserDto): Promise<User> {
+    return this.service.create(body);
+  }
+
+  @Post(':userId/follows/:communityId')
+  public followCommunity(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('communityId', ParseIntPipe) communityId: number,
+  ): Promise<User> {
+    return this.service.followCommunity(userId, communityId);
+  }
 
   @Get()
   public getAll(): Promise<User[]> {
@@ -42,17 +56,12 @@ export class UserController {
     return this.getPosts(userId);
   }
 
-  @Post()
-  public create(@Body() body: CreateUserDto): Promise<User> {
-    return this.service.create(body);
-  }
-
-  @Post(':userId/follows/:communityId')
-  public followCommunity(
+  @Put(':userId')
+  public update(
     @Param('userId', ParseIntPipe) userId: number,
-    @Param('communityId', ParseIntPipe) communityId: number,
+    @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
-    return this.service.followCommunity(userId, communityId);
+    return this.service.update(userId, updateUserDto);
   }
 
   @Delete(':userId')

@@ -24,7 +24,7 @@ export class Community {
   @Column({ nullable: true })
   image: string;
 
-  @OneToMany(() => Post, (post) => post.community)
+  @OneToMany(() => Post, (post) => post.community, { onDelete: 'CASCADE' })
   posts: Post[];
 
   @ManyToMany(() => User, (user) => user.followedCommunities)

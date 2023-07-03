@@ -31,7 +31,7 @@ export class Post {
   @ManyToOne(() => Community, (community) => community.posts)
   community: Community;
 
-  @OneToMany(() => Comment, (comment) => comment.post)
+  @OneToMany(() => Comment, (comment) => comment.post, { onDelete: 'CASCADE' })
   comments: Comment[];
 
   // Create/Update time

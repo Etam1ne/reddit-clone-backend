@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -12,6 +13,7 @@ import { CreateCommunityDto, UpdateCommunityDto } from './community.dto';
 import { Community } from './community.entity';
 import { User } from 'src/user/user.entity';
 import { Post as UsersPost } from 'src/post/post.entity';
+import { DeleteResult } from 'typeorm';
 
 @Controller('communities')
 export class CommunityController {
@@ -47,5 +49,12 @@ export class CommunityController {
     @Param('communityId', ParseIntPipe) communityId: number,
   ): Promise<User[]> {
     return this.service.getFollowers(communityId);
+  }
+
+  @Delete(':communityId')
+  public deleteCommunity(
+    @Param('communityId', ParseIntPipe) communityId: number,
+  ): Promise<DeleteResult> {
+    return this.service.delete(communityId);
   }
 }

@@ -44,7 +44,7 @@ export class PostService {
     postId: number,
     updatePostDto: UpdatePostDto,
   ): Promise<Post> {
-    this.postRepository.update(postId, updatePostDto);
+    await this.postRepository.update(postId, updatePostDto);
 
     return this.postRepository.findOne({ where: { postId } });
   }
