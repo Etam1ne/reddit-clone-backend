@@ -1,38 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
-import { CommunityModule } from './community/community.module';
-import { PostController } from './post/post.controller';
-import { PostModule } from './post/post.module';
-import { CommentModule } from './comment/comment.module';
+import { AuthModule } from 'src/api/auth/auth.module';
+import { ApiModule } from './api/api.module';
+import { PostgresModule } from 'src/infra/postgres/postgres.module';
+
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ envFilePath: '.env' }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.POSTGRES_HOST,
-      port: Number(process.env.POSTGRES_PORT),
-      database: process.env.POSTGRES_NAME,
-      username: process.env.POSTGRES_USERNAME,
-      password: process.env.POSTGRES_PASSWORD,
-      entities: ['dist/**/*.entity.{ts,js}'],
-      migrations: ['dist/migrations/*.{ts,js}'],
-      migrationsTableName: 'typeorm_migrations',
-      logger: 'file',
-      synchronize: true,
-    }),
-    UserModule,
-    AuthModule,
-    CommunityModule,
-    PostModule,
-    CommentModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [PostgresModule, AuthModule, ApiModule],
 })
 export class AppModule {}
