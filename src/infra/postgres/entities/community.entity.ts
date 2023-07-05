@@ -4,21 +4,22 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
   OneToMany,
   ManyToMany,
+  JoinColumn,
+  JoinTable,
 } from 'typeorm';
+import { Log } from './log.entity';
 
-@Entity()
-export class Community {
-  @PrimaryGeneratedColumn()
-  communityId: number;
+@Entity({ name: 'communities' })
+export class Community extends Log {
+  @PrimaryGeneratedColumn('uuid')
+  id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 57 })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar', length: 255 })
   description: string;
 
   @Column({ nullable: true })
@@ -30,13 +31,16 @@ export class Community {
   articles: Article[];
 
   @ManyToMany(() => User, (user) => user.followed_communities)
+  @JoinTable({
+    name: 'users_communities',
+    joinColumn: {
+      name: 'user',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'community',
+      referencedColumnName: 'id',
+    },
+  })
   followers: User[];
-
-  // Create/Update time
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updateAt: Date;
 }

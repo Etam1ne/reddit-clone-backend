@@ -16,7 +16,7 @@ export class UserService {
   private readonly communityRepository: Repository<Community>;
 
   public getById(userId: number): Promise<User> {
-    return this.userRepository.findOne({ where: { userId } });
+    return this.userRepository.findOne({ where: { id: userId } });
   }
 
   public getByEmail(email: string): Promise<User> {
@@ -43,7 +43,7 @@ export class UserService {
   ): Promise<User> {
     await this.userRepository.update(userId, updateUserDto);
 
-    return this.userRepository.findOne({ where: { userId } });
+    return this.userRepository.findOne({ where: { id: userId } });
   }
 
   public getAll(): Promise<User[]> {
@@ -55,11 +55,11 @@ export class UserService {
     communityId: number,
   ): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { userId },
+      where: { id: userId },
       relations: ['followedCommunities'],
     });
     const community = await this.communityRepository.findOne({
-      where: { communityId },
+      where: { id: communityId },
     });
 
     if (!user || !community) {
@@ -72,7 +72,7 @@ export class UserService {
 
   public async getFollowedCommunities(userId: number): Promise<Community[]> {
     const user = await this.userRepository.findOne({
-      where: { userId },
+      where: { id: userId },
       relations: ['followedCommunities'],
     });
 
@@ -85,7 +85,7 @@ export class UserService {
 
   public async getArticles(userId: number): Promise<Article[]> {
     const user = await this.userRepository.findOne({
-      where: { userId },
+      where: { id: userId },
       relations: ['articles'],
     });
 
@@ -96,7 +96,7 @@ export class UserService {
     return user.articles;
   }
 
-  public delete(userId): Promise<DeleteResult> {
+  public delete(userId: number): Promise<DeleteResult> {
     return this.userRepository.delete(userId);
   }
 }

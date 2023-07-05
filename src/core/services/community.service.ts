@@ -30,7 +30,7 @@ export class CommunityService {
   ): Promise<Community> {
     this.repository.update(communityId, updateCommunityDto);
 
-    return this.repository.findOne({ where: { communityId } });
+    return this.repository.findOne({ where: { id: communityId } });
   }
 
   public getAll() {
@@ -39,7 +39,7 @@ export class CommunityService {
 
   public async getFollowers(communityId: number): Promise<User[]> {
     const community = await this.repository.findOne({
-      where: { communityId },
+      where: { id: communityId },
       relations: ['followers'],
     });
 
@@ -52,7 +52,7 @@ export class CommunityService {
 
   public async getArticles(communityId: number): Promise<Article[]> {
     const community = await this.repository.findOne({
-      where: { communityId },
+      where: { id: communityId },
       relations: ['articles'],
     });
 

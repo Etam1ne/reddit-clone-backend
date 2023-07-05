@@ -2,8 +2,7 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
+  JoinColumn,
   OneToMany,
   ManyToMany,
   JoinTable,
@@ -11,16 +10,17 @@ import {
 import { Comment } from 'src/infra/postgres/entities/comment.entity';
 import { Article } from 'src/infra/postgres/entities/article.entity';
 import { Community } from 'src/infra/postgres/entities/community.entity';
+import { Log } from './log.entity';
 
 @Entity('users')
-export class User {
-  @PrimaryGeneratedColumn()
-  userId: number;
+export class User extends Log {
+  @PrimaryGeneratedColumn('uuid')
+  id: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 16 })
   username: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column({ select: false })
@@ -33,14 +33,5 @@ export class User {
   articles: Article[];
 
   @ManyToMany(() => Community, (community) => community.followers)
-  @JoinTable({ name: 'users_communities' })
   followed_communities: Community[];
-
-  // Create/Update time
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updateAt: Date;
 }

@@ -19,7 +19,7 @@ export class CommentService {
 
   public async getByArticle(articleId: number): Promise<Comment[]> {
     const article = await this.articleRepository.findOne({
-      where: { articleId },
+      where: { id: articleId },
     });
 
     if (!article) {
@@ -27,17 +27,17 @@ export class CommentService {
     }
 
     return this.commentRepository.find({
-      where: { article: { articleId: article.articleId } },
+      where: { article: { id: article.id } },
       relations: ['childComments'],
     });
   }
 
   public async create(createCommentDto: CreateCommentDto): Promise<Comment> {
     const user = await this.userRepository.findOne({
-      where: { userId: createCommentDto.userId },
+      where: { id: createCommentDto.userId },
     });
     const article = await this.articleRepository.findOne({
-      where: { articleId: createCommentDto.articleId },
+      where: { id: createCommentDto.articleId },
     });
 
     if (!user || !article) {
@@ -49,15 +49,15 @@ export class CommentService {
     comment.article = article;
     comment.user = user;
     comment.content = createCommentDto.content;
-    comment.votes = 0;
-    comment.childComments = [];
+    comment.votes = [];
+    comment.child_comments = [];
 
     if (createCommentDto.commentId) {
       const parentComment = await this.commentRepository.findOne({
-        where: { commentId: createCommentDto.commentId },
+        where: { id: createCommentDto.commentId },
       });
 
-      comment.parentComment = parentComment;
+      comment.parent_comment = parentComment;
     }
 
     return this.commentRepository.save(comment);

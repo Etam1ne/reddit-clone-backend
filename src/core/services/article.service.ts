@@ -27,11 +27,11 @@ export class ArticleService {
 
     article.header = createArticleDto.header;
     article.image = createArticleDto.image;
-    article.textContent = createArticleDto.textContent;
+    article.text_content = createArticleDto.textContent;
 
-    const user = await this.userRepository.findOne({ where: { userId } });
+    const user = await this.userRepository.findOne({ where: { id: userId } });
     const community = await this.communityRepository.findOne({
-      where: { communityId },
+      where: { id: communityId },
     });
 
     article.user = user;
@@ -47,7 +47,7 @@ export class ArticleService {
   ): Promise<Article> {
     await this.articleRepository.update(articleId, updateArticleDto);
 
-    return this.articleRepository.findOne({ where: { articleId } });
+    return this.articleRepository.findOne({ where: { id: articleId } });
   }
 
   public delete(articleId: number): Promise<DeleteResult> {
