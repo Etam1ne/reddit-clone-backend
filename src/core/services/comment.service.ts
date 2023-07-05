@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DeleteResult, Repository } from 'typeorm';
-import { Comment } from 'src/shared/entities/comment.entity';
+import { Comment } from 'src/infra/postgres/entities/comment.entity';
 import { CreateCommentDto } from 'src/shared/dtos/create-comment.dto';
-import { Article } from 'src/shared/entities/article.entity';
-import { User } from 'src/shared/entities/user.entity';
+import { Article } from 'src/infra/postgres/entities/article.entity';
+import { User } from 'src/infra/postgres/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -18,7 +18,9 @@ export class CommentService {
   ) {}
 
   public async getByArticle(articleId: number): Promise<Comment[]> {
-    const article = await this.articleRepository.findOne({ where: { articleId } });
+    const article = await this.articleRepository.findOne({
+      where: { articleId },
+    });
 
     if (!article) {
       throw new NotFoundException('Article not found');

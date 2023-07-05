@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Community } from 'src/shared/entities/community.entity';
+import { Community } from 'src/infra/postgres/entities/community.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateCommunityDto } from 'src/shared/dtos/create-community.dto';
 import { UpdateCommunityDto } from 'src/shared/dtos/update-community.dto';
-import { User } from 'src/shared/entities/user.entity';
-import { Article } from 'src/shared/entities/article.entity';
+import { User } from 'src/infra/postgres/entities/user.entity';
+import { Article } from 'src/infra/postgres/entities/article.entity';
 
 @Injectable()
 export class CommunityService {

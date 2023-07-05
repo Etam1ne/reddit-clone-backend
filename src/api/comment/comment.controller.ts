@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CommentService } from 'src/core/services/comment.service';
 import { CreateCommentDto } from 'src/shared/dtos/create-comment.dto';
-import { Comment } from 'src/shared/entities/comment.entity';
+import { Comment } from 'src/infra/postgres/entities/comment.entity';
 import { DeleteResult } from 'typeorm';
 
 @Controller('comments')

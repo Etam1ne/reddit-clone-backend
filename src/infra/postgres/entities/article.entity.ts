@@ -1,6 +1,6 @@
-import { Comment } from 'src/shared/entities/comment.entity';
-import { Community } from 'src/shared/entities/community.entity';
-import { User } from 'src/shared/entities/user.entity';
+import { Comment } from 'src/infra/postgres/entities/comment.entity';
+import { Community } from 'src/infra/postgres/entities/community.entity';
+import { User } from 'src/infra/postgres/entities/user.entity';
 import {
   Entity,
   Column,
@@ -31,7 +31,9 @@ export class Article {
   @ManyToOne(() => Community, (community) => community.articles)
   community: Community;
 
-  @OneToMany(() => Comment, (comment) => comment.article, { onDelete: 'CASCADE' })
+  @OneToMany(() => Comment, (comment) => comment.article, {
+    onDelete: 'CASCADE',
+  })
   comments: Comment[];
 
   // Create/Update time

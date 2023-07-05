@@ -1,4 +1,3 @@
-import { Comment } from 'src/shared/entities/comment.entity';
 import {
   Entity,
   Column,
@@ -9,8 +8,9 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Article } from 'src/shared/entities/article.entity';
-import { Community } from 'src/shared/entities/community.entity';
+import { Comment } from 'src/infra/postgres/entities/comment.entity';
+import { Article } from 'src/infra/postgres/entities/article.entity';
+import { Community } from 'src/infra/postgres/entities/community.entity';
 
 @Entity('users')
 export class User {

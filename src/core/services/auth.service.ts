@@ -8,7 +8,7 @@ import { UserService } from 'src/core/services/user.service';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDto, SignUpDto } from 'src/shared/dtos/auth.dto';
-import { User } from 'src/shared/entities/user.entity';
+import { User } from 'src/infra/postgres/entities/user.entity';
 
 @Injectable()
 export class AuthService {

@@ -1,5 +1,5 @@
-import { Article } from 'src/shared/entities/article.entity';
-import { User } from 'src/shared/entities/user.entity';
+import { Article } from 'src/infra/postgres/entities/article.entity';
+import { User } from 'src/infra/postgres/entities/user.entity';
 import {
   Entity,
   Column,
@@ -24,7 +24,9 @@ export class Community {
   @Column({ nullable: true })
   image: string;
 
-  @OneToMany(() => Article, (article) => article.community, { onDelete: 'CASCADE' })
+  @OneToMany(() => Article, (article) => article.community, {
+    onDelete: 'CASCADE',
+  })
   articles: Article[];
 
   @ManyToMany(() => User, (user) => user.followed_communities)

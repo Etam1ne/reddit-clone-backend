@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DeleteResult, Repository } from 'typeorm';
-import { Article } from 'src/shared/entities/article.entity';
+import { Article } from 'src/infra/postgres/entities/article.entity';
 import { CreateArticleDto } from 'src/shared/dtos/create-article.dto';
 import { UpdateArticleDto } from 'src/shared/dtos/update-article.dto';
-import { User } from 'src/shared/entities/user.entity';
-import { Community } from 'src/shared/entities/community.entity';
+import { User } from 'src/infra/postgres/entities/user.entity';
+import { Community } from 'src/infra/postgres/entities/community.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()

@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from 'src/api/auth/auth.module';
 import { ApiModule } from './api/api.module';
-import { PostgresModule } from 'src/infra/postgres/postgres.module';
-
+import { CoreModule } from './core/core.module';
+import { InfraModule } from './infra/infra.module';
 
 @Module({
-  imports: [PostgresModule, AuthModule, ApiModule],
+  imports: [InfraModule, ApiModule, CoreModule],
 })
 export class AppModule {}

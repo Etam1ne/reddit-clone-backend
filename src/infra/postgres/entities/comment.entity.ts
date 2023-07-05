@@ -1,5 +1,5 @@
-import { Article } from 'src/shared/entities/article.entity';
-import { User } from 'src/shared/entities/user.entity';
+import { Article } from 'src/infra/postgres/entities/article.entity';
+import { User } from 'src/infra/postgres/entities/user.entity';
 import {
   Entity,
   Column,

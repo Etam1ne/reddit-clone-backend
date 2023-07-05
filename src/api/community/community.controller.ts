@@ -12,9 +12,9 @@ import { DeleteResult } from 'typeorm';
 import { CommunityService } from 'src/core/services/community.service';
 import { CreateCommunityDto } from 'src/shared/dtos/create-community.dto';
 import { UpdateCommunityDto } from 'src/shared/dtos/update-community.dto';
-import { Community } from 'src/shared/entities/community.entity';
-import { User } from 'src/shared/entities/user.entity';
-import { Article } from 'src/shared/entities/article.entity';
+import { Community } from 'src/infra/postgres/entities/community.entity';
+import { User } from 'src/infra/postgres/entities/user.entity';
+import { Article } from 'src/infra/postgres/entities/article.entity';
 
 @Controller('communities')
 export class CommunityController {
