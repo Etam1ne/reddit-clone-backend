@@ -3,6 +3,7 @@ import {
   UnauthorizedException,
   HttpStatus,
   HttpException,
+  NotFoundException,
 } from '@nestjs/common';
 import { UserService } from 'src/core/services/user.service';
 import { compare } from 'bcrypt';
@@ -33,9 +34,7 @@ export class AuthService {
     const user = await this.userService.getByEmail(signInDto.email);
     const isPassword = await compare(signInDto.password, user.password);
 
-    if (!isPassword) {
-      throw new UnauthorizedException();
-    }
+    if (!isPassword) throw new UnauthorizedException();
 
     return this.generateJwtToken(user);
   }
@@ -43,12 +42,25 @@ export class AuthService {
   private async generateJwtToken(user: User) {
     const payload = {
       sub: user.id,
-      username: user.username,
       email: user.email,
     };
 
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  public async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.userService.getByEmail(email);
+
+    if (!user) throw new NotFoundException('There is no user with such email');
+
+    const isPassword = await compare(pass, user.password);
+    
+    if (isPassword) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
   }
 }

@@ -2,12 +2,12 @@ import { IsOptional, IsString } from 'class-validator';
 
 export class CreateArticleDto {
   @IsString()
-  header: string;
+  public readonly header: string;
 
   @IsString()
   @IsOptional()
-  image: string;
+  public readonly image: string;
 
   @IsString()
-  textContent: string;
+  public readonly textContent: string;
 }

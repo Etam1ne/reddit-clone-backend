@@ -2,13 +2,13 @@ import { IsOptional, IsString } from 'class-validator';
 
 export class CreateCommunityDto {
   @IsString()
-  name: string;
+  public readonly name: string;
 
   @IsString()
   @IsOptional()
-  description: string;
+  public readonly description: string;
 
   @IsString()
   @IsOptional()
-  image: string;
+  public readonly image: string;
 }
