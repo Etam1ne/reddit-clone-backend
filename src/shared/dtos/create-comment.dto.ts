@@ -1,16 +1,19 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateCommentDto {
+  @IsNotEmpty()
   @IsNumber()
-  public readonly userId: number;
+  public readonly userId: string;
 
+  @IsNotEmpty()
   @IsNumber()
-  public readonly articleId: number;
+  public readonly articleId: string;
 
+  @IsNotEmpty()
   @IsString()
   public readonly content: string;
 
-  @IsNumber()
   @IsOptional()
-  public readonly commentId: number;
+  @IsNumber()
+  public readonly commentId: string;
 }

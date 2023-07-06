@@ -25,7 +25,7 @@ export class CommunityService {
   }
 
   public async updateInfo(
-    communityId: number,
+    communityId: string,
     updateCommunityDto: UpdateCommunityDto,
   ): Promise<Community> {
     this.repository.update(communityId, updateCommunityDto);
@@ -37,7 +37,7 @@ export class CommunityService {
     return this.repository.find();
   }
 
-  public async getFollowers(communityId: number): Promise<User[]> {
+  public async getFollowers(communityId: string): Promise<User[]> {
     const community = await this.repository.findOne({
       where: { id: communityId },
       relations: ['followers'],
@@ -50,7 +50,7 @@ export class CommunityService {
     return community.followers;
   }
 
-  public async getArticles(communityId: number): Promise<Article[]> {
+  public async getArticles(communityId: string): Promise<Article[]> {
     const community = await this.repository.findOne({
       where: { id: communityId },
       relations: ['articles'],
@@ -63,7 +63,7 @@ export class CommunityService {
     return community.articles;
   }
 
-  public async delete(communityId: number): Promise<DeleteResult> {
+  public async delete(communityId: string): Promise<DeleteResult> {
     return this.repository.delete(communityId);
   }
 }

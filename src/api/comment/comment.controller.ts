@@ -1,11 +1,11 @@
 import {
   Controller,
-  ParseIntPipe,
   Param,
   Get,
   Post,
   Body,
   Delete,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { CommentService } from 'src/core/services/comment.service';
 import { CreateCommentDto } from 'src/shared/dtos/create-comment.dto';
@@ -23,14 +23,14 @@ export class CommentController {
 
   @Get(':articleId')
   public getByArticle(
-    @Param('articleId', ParseIntPipe) articleId: number,
+    @Param('articleId', ParseUUIDPipe) articleId: string,
   ): Promise<Comment[]> {
     return this.service.getByArticle(articleId);
   }
 
   @Delete(':commentId')
   public delete(
-    @Param('commentId', ParseIntPipe) commentId: number,
+    @Param('commentId', ParseUUIDPipe) commentId: string,
   ): Promise<DeleteResult> {
     return this.service.delete(commentId);
   }

@@ -3,8 +3,8 @@ import { CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'votes' })
 export class Vote {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz'})
+  createdAt: Date;
 }

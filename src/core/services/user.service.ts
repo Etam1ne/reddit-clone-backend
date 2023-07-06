@@ -15,7 +15,7 @@ export class UserService {
   @InjectRepository(Community)
   private readonly communityRepository: Repository<Community>;
 
-  public getById(userId: number): Promise<User> {
+  public getById(userId: string): Promise<User> {
     return this.userRepository.findOne({ where: { id: userId } });
   }
 
@@ -28,7 +28,7 @@ export class UserService {
 
     user.username = body.username;
     user.email = body.email;
-    user.followed_communities = [];
+    user.followedCommunities = [];
     user.comments = [];
     user.articles = [];
 
@@ -38,7 +38,7 @@ export class UserService {
   }
 
   public async update(
-    userId: number,
+    userId: string,
     updateUserDto: UpdateUserDto,
   ): Promise<User> {
     await this.userRepository.update(userId, updateUserDto);
@@ -51,8 +51,8 @@ export class UserService {
   }
 
   public async followCommunity(
-    userId: number,
-    communityId: number,
+    userId: string,
+    communityId: string,
   ): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -66,11 +66,11 @@ export class UserService {
       throw new NotFoundException('User or community not found');
     }
 
-    user.followed_communities.push(community);
+    user.followedCommunities.push(community);
     return this.userRepository.save(user);
   }
 
-  public async getFollowedCommunities(userId: number): Promise<Community[]> {
+  public async getFollowedCommunities(userId: string): Promise<Community[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['followedCommunities'],
@@ -80,10 +80,10 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    return user.followed_communities;
+    return user.followedCommunities;
   }
 
-  public async getArticles(userId: number): Promise<Article[]> {
+  public async getArticles(userId: string): Promise<Article[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['articles'],
@@ -96,7 +96,7 @@ export class UserService {
     return user.articles;
   }
 
-  public delete(userId: number): Promise<DeleteResult> {
+  public delete(userId: string): Promise<DeleteResult> {
     return this.userRepository.delete(userId);
   }
 }

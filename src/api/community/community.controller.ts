@@ -4,7 +4,7 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -32,14 +32,14 @@ export class CommunityController {
 
   @Get(':communityId/articles')
   public getArticles(
-    @Param('communityId', ParseIntPipe) communityId: number,
+    @Param('communityId', ParseUUIDPipe) communityId: string,
   ): Promise<Article[]> {
     return this.service.getArticles(communityId);
   }
 
   @Put(':communityId')
   public updateInfo(
-    @Param('communityId', ParseIntPipe) communityId: number,
+    @Param('communityId', ParseUUIDPipe) communityId: string,
     @Body() updateCommunityDto: UpdateCommunityDto,
   ): Promise<Community> {
     return this.service.updateInfo(communityId, updateCommunityDto);
@@ -47,14 +47,14 @@ export class CommunityController {
 
   @Get(':communityId/followers')
   public getFollowers(
-    @Param('communityId', ParseIntPipe) communityId: number,
+    @Param('communityId', ParseUUIDPipe) communityId: string,
   ): Promise<User[]> {
     return this.service.getFollowers(communityId);
   }
 
   @Delete(':communityId')
   public deleteCommunity(
-    @Param('communityId', ParseIntPipe) communityId: number,
+    @Param('communityId', ParseUUIDPipe) communityId: string,
   ): Promise<DeleteResult> {
     return this.service.delete(communityId);
   }

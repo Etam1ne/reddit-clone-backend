@@ -1,14 +1,15 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateCommunityDto {
+  @IsNotEmpty()
   @IsString()
   public readonly name: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   public readonly description: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   public readonly image: string;
 }

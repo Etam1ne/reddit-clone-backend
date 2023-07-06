@@ -17,7 +17,7 @@ export class CommentService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  public async getByArticle(articleId: number): Promise<Comment[]> {
+  public async getByArticle(articleId: string): Promise<Comment[]> {
     const article = await this.articleRepository.findOne({
       where: { id: articleId },
     });
@@ -50,20 +50,20 @@ export class CommentService {
     comment.user = user;
     comment.content = createCommentDto.content;
     comment.votes = [];
-    comment.child_comments = [];
+    comment.childComments = [];
 
     if (createCommentDto.commentId) {
       const parentComment = await this.commentRepository.findOne({
         where: { id: createCommentDto.commentId },
       });
 
-      comment.parent_comment = parentComment;
+      comment.parentComment = parentComment;
     }
 
     return this.commentRepository.save(comment);
   }
 
-  public async delete(commentId: number): Promise<DeleteResult> {
+  public async delete(commentId: string): Promise<DeleteResult> {
     return this.commentRepository.delete(commentId);
   }
 }

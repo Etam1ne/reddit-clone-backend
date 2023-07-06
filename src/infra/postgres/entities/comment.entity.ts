@@ -14,7 +14,7 @@ import { Log } from './log.entity';
 @Entity({ name: 'comments' })
 export class Comment extends Log {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ type: 'text' })
   content: string;
@@ -33,15 +33,15 @@ export class Comment extends Log {
   })
   user: User;
 
-  @ManyToOne(() => Comment, (comment) => comment.child_comments)
+  @ManyToOne(() => Comment, (comment) => comment.childComments)
   @JoinColumn({
     name: 'parent_comment_id',
     foreignKeyConstraintName: 'fk_parent_comment_id',
   })
-  parent_comment: Comment;
+  parentComment: Comment;
 
-  @OneToMany(() => Comment, (comment) => comment.parent_comment)
-  child_comments: Comment[];
+  @OneToMany(() => Comment, (comment) => comment.parentComment)
+  childComments: Comment[];
 
   @OneToMany(() => CommentVote, (vote) => vote.comment, {
     onDelete: 'CASCADE',

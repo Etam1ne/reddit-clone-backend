@@ -19,19 +19,17 @@ export class ArticleService {
   ) {}
 
   public async create(
-    communityId: number,
-    userId: number,
     createArticleDto: CreateArticleDto,
   ) {
     const article = new Article();
 
     article.header = createArticleDto.header;
     article.image = createArticleDto.image;
-    article.text_content = createArticleDto.textContent;
+    article.textContent = createArticleDto.textContent;
 
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const user = await this.userRepository.findOne({ where: { id: createArticleDto.userId } });
     const community = await this.communityRepository.findOne({
-      where: { id: communityId },
+      where: { id: createArticleDto.communityId },
     });
 
     article.user = user;
@@ -42,7 +40,7 @@ export class ArticleService {
   }
 
   public async update(
-    articleId: number,
+    articleId: string,
     updateArticleDto: UpdateArticleDto,
   ): Promise<Article> {
     await this.articleRepository.update(articleId, updateArticleDto);
@@ -50,7 +48,7 @@ export class ArticleService {
     return this.articleRepository.findOne({ where: { id: articleId } });
   }
 
-  public delete(articleId: number): Promise<DeleteResult> {
+  public delete(articleId: string): Promise<DeleteResult> {
     return this.articleRepository.delete(articleId);
   }
 }

@@ -14,7 +14,7 @@ import { Log } from './log.entity';
 @Entity({ name: 'communities' })
 export class Community extends Log {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ type: 'varchar', length: 57 })
   name: string;
@@ -30,7 +30,7 @@ export class Community extends Log {
   })
   articles: Article[];
 
-  @ManyToMany(() => User, (user) => user.followed_communities)
+  @ManyToMany(() => User, (user) => user.followedCommunities)
   @JoinTable({
     name: 'users_communities',
     joinColumn: {

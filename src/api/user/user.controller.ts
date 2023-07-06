@@ -4,9 +4,11 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
+  Patch,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/shared/dtos/create-user.dto';
 import { UpdateUserDto } from 'src/shared/dtos/update-user.dto';
@@ -25,10 +27,10 @@ export class UserController {
     return this.service.create(body);
   }
 
-  @Post(':userId/follows/:communityId') //FIXME:
+  @Patch(':userId')
   public followCommunity(
-    @Param('userId', ParseIntPipe) userId: number,
-    @Param('communityId', ParseIntPipe) communityId: number,
+    @Param('userId', ParseUUIDPipe) userId: string,
+    @Query('communityId', ParseUUIDPipe) communityId: string,
   ): Promise<User> {
     return this.service.followCommunity(userId, communityId);
   }
@@ -39,27 +41,27 @@ export class UserController {
   }
 
   @Get(':userId')
-  public getById(@Param('userId', ParseIntPipe) id: number): Promise<User> {
-    return this.service.getById(id);
+  public getById(@Param('userId', ParseUUIDPipe) userId: string): Promise<User> {
+    return this.service.getById(userId);
   }
 
   @Get(':userId/followedCommunities')
   public getFollowedCommunities(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<Community[]> {
     return this.service.getFollowedCommunities(userId);
   }
 
   @Get(':userId/articles')
   public getPosts(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<Article[]> {
     return this.getPosts(userId);
   }
 
   @Put(':userId')
   public update(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('userId', ParseUUIDPipe) userId: string,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<User> {
     return this.service.update(userId, updateUserDto);
@@ -67,7 +69,7 @@ export class UserController {
 
   @Delete(':userId')
   public delete(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<DeleteResult> {
     return this.service.delete(userId);
   }

@@ -15,7 +15,7 @@ import { Log } from './log.entity';
 @Entity('users')
 export class User extends Log {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ type: 'varchar', length: 16 })
   username: string;
@@ -33,5 +33,5 @@ export class User extends Log {
   articles: Article[];
 
   @ManyToMany(() => Community, (community) => community.followers)
-  followed_communities: Community[];
+  followedCommunities: Community[];
 }

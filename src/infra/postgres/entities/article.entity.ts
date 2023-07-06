@@ -15,7 +15,7 @@ import { Log } from './log.entity';
 @Entity({ name: 'articles' })
 export class Article extends Log {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ type: 'varchar', length: 63 })
   header: string;
@@ -23,8 +23,8 @@ export class Article extends Log {
   @Column({ nullable: true })
   image: string;
 
-  @Column({ type: 'text' })
-  text_content: string;
+  @Column({ type: 'text', name: 'text_content' })
+  textContent: string;
 
   @ManyToOne(() => User, (user) => user.articles, {
     onDelete: 'NO ACTION',

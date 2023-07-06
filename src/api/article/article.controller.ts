@@ -3,9 +3,10 @@ import {
   Controller,
   Delete,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateArticleDto } from 'src/shared/dtos/create-article.dto';
 import { UpdateArticleDto } from 'src/shared/dtos/update-article.dto';
@@ -15,25 +16,23 @@ import { ArticleService } from 'src/core/services/article.service';
 export class ArticleController {
   constructor(private readonly service: ArticleService) {}
 
-  @Post(':communityId/:userId')
+  @Post()
   public create(
-    @Param('communityId', ParseIntPipe) communityId: number,
-    @Param('userId', ParseIntPipe) userId: number,
-    @Body() createPostDto: CreateArticleDto,
+    @Body() createArticleDto: CreateArticleDto,
   ) {
-    return this.service.create(communityId, userId, createPostDto);
+    return this.service.create(createArticleDto);
   }
 
-  @Put(':postId')
+  @Put(':articleId')
   public update(
-    @Param('postId', ParseIntPipe) postId: number,
+    @Param('articleId', ParseUUIDPipe) articleId: string,
     @Body() updatePostDto: UpdateArticleDto,
   ) {
-    return this.service.update(postId, updatePostDto);
+    return this.service.update(articleId, updatePostDto);
   }
 
-  @Delete(':postId')
-  public delete(@Param('postId', ParseIntPipe) postId: number) {
-    return this.service.delete(postId);
+  @Delete(':articleId')
+  public delete(@Param('articleId', ParseUUIDPipe) articleId: string) {
+    return this.service.delete(articleId);
   }
 }
