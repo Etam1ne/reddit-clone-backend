@@ -13,8 +13,6 @@ export class CommentService {
     private readonly commentRepository: Repository<Comment>,
     @InjectRepository(Article)
     private readonly articleRepository: Repository<Article>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
   ) {}
 
   public async getByArticle(articleId: string): Promise<Comment[]> {
@@ -33,24 +31,11 @@ export class CommentService {
   }
 
   public async create(createCommentDto: CreateCommentDto): Promise<Comment> {
-    const user = await this.userRepository.findOne({
-      where: { id: createCommentDto.userId },
-    });
-    const article = await this.articleRepository.findOne({
-      where: { id: createCommentDto.articleId },
-    });
-
-    if (!user || !article) {
-      throw new NotFoundException('User or article not found');
-    }
-
-    const comment = new Comment();
-
-    comment.article = article;
-    comment.user = user;
-    comment.content = createCommentDto.content;
-    comment.votes = [];
-    comment.childComments = [];
+    const comment = this.commentRepository.create({
+      ...createCommentDto, 
+      article: { id: createCommentDto.articleId },
+      user: { id: createCommentDto.userId }
+    })
 
     if (createCommentDto.commentId) {
       const parentComment = await this.commentRepository.findOne({
@@ -64,6 +49,6 @@ export class CommentService {
   }
 
   public async delete(commentId: string): Promise<DeleteResult> {
-    return this.commentRepository.delete(commentId);
+    return this.commentRepository.delete({ id: commentId });
   }
 }

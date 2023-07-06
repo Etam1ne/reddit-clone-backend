@@ -10,35 +10,29 @@ import { Article } from 'src/infra/postgres/entities/article.entity';
 @Injectable()
 export class CommunityService {
   @InjectRepository(Community)
-  private readonly repository: Repository<Community>;
+  private readonly communityRepository: Repository<Community>;
 
-  public create(body: CreateCommunityDto): Promise<Community> {
-    const community = new Community();
+  public create(createCommunityDto: CreateCommunityDto): Promise<Community> {
+    const community = this.communityRepository.create(createCommunityDto);
 
-    community.name = body.name;
-    community.description = body.description;
-    community.image = body.image;
-    community.followers = [];
-    community.articles = [];
-
-    return this.repository.save(community);
+    return this.communityRepository.save(community);
   }
 
   public async updateInfo(
     communityId: string,
     updateCommunityDto: UpdateCommunityDto,
   ): Promise<Community> {
-    this.repository.update(communityId, updateCommunityDto);
+    this.communityRepository.update({ id: communityId }, updateCommunityDto);
 
-    return this.repository.findOne({ where: { id: communityId } });
+    return this.communityRepository.findOne({ where: { id: communityId } });
   }
 
   public getAll() {
-    return this.repository.find();
+    return this.communityRepository.find();
   }
 
   public async getFollowers(communityId: string): Promise<User[]> {
-    const community = await this.repository.findOne({
+    const community = await this.communityRepository.findOne({
       where: { id: communityId },
       relations: ['followers'],
     });
@@ -51,7 +45,7 @@ export class CommunityService {
   }
 
   public async getArticles(communityId: string): Promise<Article[]> {
-    const community = await this.repository.findOne({
+    const community = await this.communityRepository.findOne({
       where: { id: communityId },
       relations: ['articles'],
     });
@@ -64,6 +58,6 @@ export class CommunityService {
   }
 
   public async delete(communityId: string): Promise<DeleteResult> {
-    return this.repository.delete(communityId);
+    return this.communityRepository.delete({ id: communityId });
   }
 }

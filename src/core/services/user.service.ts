@@ -23,16 +23,10 @@ export class UserService {
     return this.userRepository.findOne({ where: { email },  select: { password: true }});
   }
 
-  public async create(body: CreateUserDto): Promise<User> {
-    const user: User = new User();
+  public async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = this.userRepository.create(createUserDto);
 
-    user.username = body.username;
-    user.email = body.email;
-    user.followedCommunities = [];
-    user.comments = [];
-    user.articles = [];
-
-    user.password = await hash(body.password, 5);
+    user.password = await hash(createUserDto.password, 5);
 
     return this.userRepository.save(user);
   }
@@ -41,7 +35,7 @@ export class UserService {
     userId: string,
     updateUserDto: UpdateUserDto,
   ): Promise<User> {
-    await this.userRepository.update(userId, updateUserDto);
+    await this.userRepository.update({ id: userId }, updateUserDto);
 
     return this.userRepository.findOne({ where: { id: userId } });
   }
@@ -66,6 +60,7 @@ export class UserService {
       throw new NotFoundException('User or community not found');
     }
 
+    user.followedCommunities = user.followedCommunities ?? [];
     user.followedCommunities.push(community);
     return this.userRepository.save(user);
   }
@@ -97,6 +92,6 @@ export class UserService {
   }
 
   public delete(userId: string): Promise<DeleteResult> {
-    return this.userRepository.delete(userId);
+    return this.userRepository.delete({ id: userId });
   }
 }
