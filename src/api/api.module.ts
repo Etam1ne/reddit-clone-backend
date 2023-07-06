@@ -10,11 +10,11 @@ import { Article } from "src/infra/postgres/entities/article.entity";
 import { Comment } from "src/infra/postgres/entities/comment.entity";
 import { Community } from "src/infra/postgres/entities/community.entity";
 import { User } from "src/infra/postgres/entities/user.entity";
-import { UserController } from "./user/user.controller";
-import { AuthController } from "./auth/auth.controller";
-import { CommunityController } from "./community/community.controller";
-import { CommentController } from "./comment/comment.controller";
-import { ArticleController } from "./article/article.controller";
+import { UserController } from "./user.controller";
+import { AuthController } from "./auth.controller";
+import { CommunityController } from "./community.controller";
+import { CommentController } from "./comment.controller";
+import { ArticleController } from "./article.controller";
 
 @Module({
     imports: [TypeOrmModule.forFeature([User, Article, Comment, Community])],
