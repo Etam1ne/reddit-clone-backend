@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { CoreModule } from './core/core.module';
-import { InfraModule } from './infra/infra.module';
-import { ApiModule } from './api/api.module';
+import { AuthModule } from './auth/auth.module';
+import { ProvidersModule } from './providers/providers.module';
+import { ModelsModule } from './models/models.module';
 
 @Module({
-  imports: [InfraModule, CoreModule, ApiModule],
+  imports: [AuthModule, ProvidersModule, ModelsModule],
 })
 export class AppModule {}
