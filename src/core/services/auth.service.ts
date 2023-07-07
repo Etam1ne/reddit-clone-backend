@@ -37,10 +37,10 @@ export class AuthService {
 
     if (!isPassword) throw new UnauthorizedException();
 
-    return this.generateJwtToken(user);
+    return this.login(user);
   }
 
-  private async generateJwtToken(user: User) {
+  public async login(user: User) {
     const payload = {
       sub: user.id,
       email: user.email,

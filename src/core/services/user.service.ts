@@ -24,9 +24,9 @@ export class UserService {
   }
 
   public async create(createUserDto: CreateUserDto): Promise<User> {
-    const isEmail = this.getByEmail(createUserDto.email);
-    if (isEmail) throw new BadRequestException('User with this email already exiss');
-    
+    const isEmail = await this.getByEmail(createUserDto.email);
+    if (isEmail) throw new BadRequestException('User with this email already exists');
+
     const user = this.userRepository.create(createUserDto);
 
     user.password = await hash(createUserDto.password, 5);

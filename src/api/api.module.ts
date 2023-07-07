@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+import { JwtService, JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ArticleService } from "src/core/services/article.service";
 import { AuthService } from "src/core/services/auth.service";
@@ -15,9 +15,15 @@ import { AuthController } from "./auth.controller";
 import { CommunityController } from "./community.controller";
 import { CommentController } from "./comment.controller";
 import { ArticleController } from "./article.controller";
+import { LocalStrategy } from "src/core/use-cases/auth/local/local.strategy";
+import { PassportModule } from "@nestjs/passport";
+import { jwtConstants } from "src/shared/constants/jwt.contants.ts";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Article, Comment, Community])],
+    imports: [
+        TypeOrmModule.forFeature([User, Article, Comment, Community]),
+        PassportModule
+    ],
     providers: [
         UserService,
         AuthService,
@@ -25,6 +31,7 @@ import { ArticleController } from "./article.controller";
         CommentService,
         ArticleService,
         JwtService,
+        LocalStrategy,
     ],
     controllers: [
         UserController,
