@@ -7,7 +7,7 @@ export class CreateArticleDto {
 
   @IsOptional()
   @IsString()
-  public readonly image: string;
+  public readonly image?: string;
 
   @IsNotEmpty()
   @IsString()

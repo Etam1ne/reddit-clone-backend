@@ -17,7 +17,10 @@ import { UserService } from 'src/core/services/user.service';
 import { DeleteResult } from 'typeorm';
 import { Community } from 'src/infra/postgres/entities/community.entity';
 import { Article } from 'src/infra/postgres/entities/article.entity';
+import { ApiOperation } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly service: UserService) {}
@@ -27,6 +30,7 @@ export class UserController {
     return this.service.create(body);
   }
 
+  @ApiOperation({ description: 'Follow community' })
   @Patch(':userId')
   public followCommunity(
     @Param('userId', ParseUUIDPipe) userId: string,
@@ -35,6 +39,7 @@ export class UserController {
     return this.service.followCommunity(userId, communityId);
   }
 
+  @ApiOperation({ description: 'Get all users'})
   @Get()
   public getAll(): Promise<User[]> {
     return this.service.getAll();

@@ -15,7 +15,9 @@ import { UpdateCommunityDto } from 'src/shared/dtos/update-community.dto';
 import { Community } from 'src/infra/postgres/entities/community.entity';
 import { User } from 'src/infra/postgres/entities/user.entity';
 import { Article } from 'src/infra/postgres/entities/article.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Communities')
 @Controller('communities')
 export class CommunityController {
   constructor(private readonly service: CommunityService) {}

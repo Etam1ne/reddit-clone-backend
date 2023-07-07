@@ -7,9 +7,9 @@ export class CreateCommunityDto {
 
   @IsOptional()
   @IsString()
-  public readonly description: string;
+  public readonly description?: string;
 
   @IsOptional()
   @IsString()
-  public readonly image: string;
+  public readonly image?: string;
 }

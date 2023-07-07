@@ -9,9 +9,3 @@ export class SignInDto {
   @IsString()
   public readonly password: string;
 }
-
-export class SignUpDto extends SignInDto {
-  @IsNotEmpty()
-  @IsString()
-  public readonly username: string;
-}

@@ -15,5 +15,5 @@ export class CreateCommentDto {
 
   @IsOptional()
   @IsNumber()
-  public readonly commentId: string;
+  public readonly commentId?: string;
 }

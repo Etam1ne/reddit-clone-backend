@@ -11,7 +11,9 @@ import { CommentService } from 'src/core/services/comment.service';
 import { CreateCommentDto } from 'src/shared/dtos/create-comment.dto';
 import { Comment } from 'src/infra/postgres/entities/comment.entity';
 import { DeleteResult } from 'typeorm';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Comments')
 @Controller('comments')
 export class CommentController {
   constructor(private readonly service: CommentService) {}
