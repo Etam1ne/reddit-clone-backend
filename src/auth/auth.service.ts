@@ -28,24 +28,18 @@ export class AuthService {
       );
     }
 
-    return await this.userService.create(signUpDto);
+    await this.userService.create(signUpDto);
+    return await this.login(signUpDto)
   }
 
-  async signIn(signInDto: SignInDto): Promise<any> {
+  public async login(signInDto: SignInDto) {
     const user = await this.userService.getByEmail(signInDto.email);
-    const isPassword = await compare(signInDto.password, user.password);
 
-    if (!isPassword) throw new UnauthorizedException();
-
-    return this.login(user);
-  }
-
-  public async login(user: User) {
     const payload = {
       sub: user.id,
       email: user.email,
     };
-
+    
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

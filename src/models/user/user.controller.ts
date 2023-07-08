@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/common/dtos/create-user.dto';
 import { UpdateUserDto } from 'src/common/dtos/update-user.dto';
@@ -19,6 +20,8 @@ import { Community } from '../community/entities/community.entity';
 import { Article } from '../article/entities/article.entity';
 import { ApiOperation } from '@nestjs/swagger'
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { UserAccessGuard } from 'src/common/guards/user-access.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -30,6 +33,7 @@ export class UserController {
     return this.service.create(body);
   }
 
+  @UseGuards(UserAccessGuard)
   @ApiOperation({ description: 'Follow community' })
   @Patch(':userId')
   public followCommunity(
@@ -61,9 +65,10 @@ export class UserController {
   public getPosts(
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<Article[]> {
-    return this.getPosts(userId);
+    return this.service.getArticles(userId);
   }
 
+  @UseGuards(UserAccessGuard)
   @Put(':userId')
   public update(
     @Param('userId', ParseUUIDPipe) userId: string,
@@ -72,6 +77,7 @@ export class UserController {
     return this.service.update(userId, updateUserDto);
   }
 
+  @UseGuards(UserAccessGuard)
   @Delete(':userId')
   public delete(
     @Param('userId', ParseUUIDPipe) userId: string,

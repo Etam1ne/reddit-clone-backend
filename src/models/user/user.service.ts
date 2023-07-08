@@ -20,7 +20,13 @@ export class UserService {
   }
 
   public getByEmail(email: string): Promise<User> {
-    return this.userRepository.findOne({ where: { email },  select: { password: true }});
+    return this.userRepository.findOne({ 
+      where: { email },  
+      select: { 
+        email: true,
+        password: true,
+        id: true,
+      }});
   }
 
   public async create(createUserDto: CreateUserDto): Promise<User> {
