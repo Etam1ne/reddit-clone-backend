@@ -8,8 +8,8 @@ import { ArticleVote } from '../vote/entities/article-vote.entity';
 import { Article } from './entities/article.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Community, ArticleVote, Article])],
-    controllers: [ArticleController],
-    providers: [ArticleService],
+  imports: [TypeOrmModule.forFeature([User, Community, ArticleVote, Article])],
+  controllers: [ArticleController],
+  providers: [ArticleService],
 })
 export class ArticleModule {}

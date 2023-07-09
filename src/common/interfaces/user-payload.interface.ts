@@ -1,4 +1,4 @@
 export interface IUserLogin {
-    sub: string;
-    email: string;
+  sub: string;
+  email: string;
 }

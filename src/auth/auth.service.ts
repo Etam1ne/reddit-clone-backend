@@ -1,6 +1,5 @@
 import {
   Injectable,
-  UnauthorizedException,
   HttpStatus,
   HttpException,
   NotFoundException,
@@ -10,7 +9,6 @@ import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { SignInDto } from 'src/common/dtos/sign-in.dto';
 import { SignUpDto } from 'src/common/dtos/sign-up.dto';
-import { User } from 'src/models/user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -23,13 +21,13 @@ export class AuthService {
     const checkEmail = await this.userService.getByEmail(signUpDto.email);
     if (checkEmail) {
       throw new HttpException(
-        'User with this email is already exists',
+        'User with this email already exists',
         HttpStatus.BAD_REQUEST,
       );
     }
 
     await this.userService.create(signUpDto);
-    return await this.login(signUpDto)
+    return await this.login(signUpDto);
   }
 
   public async login(signInDto: SignInDto) {
@@ -39,7 +37,7 @@ export class AuthService {
       sub: user.id,
       email: user.email,
     };
-    
+
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
@@ -51,9 +49,9 @@ export class AuthService {
     if (!user) throw new NotFoundException('There is no user with such email');
 
     const isPassword = await compare(pass, user.password);
-    
+
     if (isPassword) {
-      const { password, ...result } = user;
+      const { password, ...result } = user; // eslint-disable-line
       return result;
     }
     return null;

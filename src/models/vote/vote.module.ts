@@ -9,6 +9,6 @@ import { CommentVote } from './entities/comment-vote.entity';
 @Module({
   imports: [Comment, Article, ArticleVote, CommentVote],
   providers: [VoteService],
-  controllers: [VoteController]
+  controllers: [VoteController],
 })
 export class VoteModule {}

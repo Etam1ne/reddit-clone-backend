@@ -13,18 +13,18 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({envFilePath: '.env'}),
-        UserModule, 
-        PassportModule, 
-        JwtModule.register({
-            secret: process.env.JWT_SECRET,
-            signOptions: { expiresIn: '24h'}
-        }),
-        TypeOrmModule.forFeature([User, Community])
-    ],
-    providers: [UserService, AuthService, LocalStrategy, JwtStrategy],
-    controllers: [AuthController],
-    exports: [AuthService],
+  imports: [
+    ConfigModule.forRoot({ envFilePath: '.env' }),
+    UserModule,
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '24h' },
+    }),
+    TypeOrmModule.forFeature([User, Community]),
+  ],
+  providers: [UserService, AuthService, LocalStrategy, JwtStrategy],
+  controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}

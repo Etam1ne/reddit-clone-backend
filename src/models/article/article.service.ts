@@ -9,17 +9,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class ArticleService {
   constructor(
     @InjectRepository(Article)
-    private readonly articleRepository: Repository<Article>
+    private readonly articleRepository: Repository<Article>,
   ) {}
 
-  public async create(
-    createArticleDto: CreateArticleDto,
-  ) {
+  public async create(createArticleDto: CreateArticleDto) {
     const article = this.articleRepository.create({
-      ...createArticleDto, 
-      user: { id: createArticleDto.userId},
-      community: { id: createArticleDto.communityId}
-    })
+      ...createArticleDto,
+      user: { id: createArticleDto.userId },
+      community: { id: createArticleDto.communityId },
+    });
     return this.articleRepository.save(article);
   }
 

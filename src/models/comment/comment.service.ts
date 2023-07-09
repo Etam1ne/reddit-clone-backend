@@ -31,10 +31,10 @@ export class CommentService {
 
   public async create(createCommentDto: CreateCommentDto): Promise<Comment> {
     const comment = this.commentRepository.create({
-      ...createCommentDto, 
+      ...createCommentDto,
       article: { id: createCommentDto.articleId },
-      user: { id: createCommentDto.userId }
-    })
+      user: { id: createCommentDto.userId },
+    });
 
     if (createCommentDto.commentId) {
       const parentComment = await this.commentRepository.findOne({

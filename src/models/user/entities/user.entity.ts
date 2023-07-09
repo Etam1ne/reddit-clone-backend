@@ -2,10 +2,8 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  JoinColumn,
   OneToMany,
   ManyToMany,
-  JoinTable,
 } from 'typeorm';
 import { Comment } from 'src/models/comment/entities/comment.entity';
 import { Article } from 'src/models/article/entities/article.entity';

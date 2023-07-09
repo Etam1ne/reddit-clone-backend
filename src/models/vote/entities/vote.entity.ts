@@ -5,6 +5,6 @@ export class Vote {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @CreateDateColumn({ name: 'created_at', type: 'timestamptz'})
+  @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 }
