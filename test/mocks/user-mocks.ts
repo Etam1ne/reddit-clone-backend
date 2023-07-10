@@ -2,6 +2,7 @@ import { CreateUserDto } from 'src/common/dtos/create-user.dto';
 import { faker } from '@faker-js/faker';
 import { User } from 'src/models/user/entities/user.entity';
 import { NoPasswordUser } from 'src/common/types/nopassword-user.type';
+import { UpdateUserDto } from 'src/common/dtos/update-user.dto';
 
 export const mockUser: User = {
   id: faker.string.uuid(),
@@ -23,4 +24,9 @@ export const mockCreateUserDto: CreateUserDto = {
 
 export const mockUserNoPassword: NoPasswordUser = {
   ...mockUser,
+};
+
+export const mockUpdateUserDto: UpdateUserDto = {
+  ...mockUser,
+  username: faker.person.firstName(),
 };
