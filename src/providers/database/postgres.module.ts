@@ -7,6 +7,7 @@ import { Comment } from 'src/models/comment/entities/comment.entity';
 import { Community } from 'src/models/community/entities/community.entity';
 import { CommentVote } from 'src/models/vote/entities/comment-vote.entity';
 import { ArticleVote } from 'src/models/vote/entities/article-vote.entity';
+import { Vote } from 'src/models/vote/entities/vote.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { ArticleVote } from 'src/models/vote/entities/article-vote.entity';
       database: process.env.POSTGRES_DB,
       username: process.env.POSTGRES_USERNAME,
       password: process.env.POSTGRES_PASSWORD,
-      entities: [User, Article, Comment, Community, CommentVote, ArticleVote],
+      entities: [User, Article, Comment, Community, CommentVote, ArticleVote, Vote],
       migrations: ['dist/infra/postgres/migrations/*.{ts,js}'],
       migrationsTableName: 'typeorm_migrations',
       logger: 'file',

@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, FindOptionsOrder, Repository } from 'typeorm';
 import { Article } from './entities/article.entity';
 import { CreateArticleDto } from 'src/common/dtos/create-article.dto';
 import { UpdateArticleDto } from 'src/common/dtos/update-article.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { feedType } from 'src/common/types/feed-type.enum';
 
 @Injectable()
 export class ArticleService {
@@ -19,6 +20,34 @@ export class ArticleService {
       community: { id: createArticleDto.communityId },
     });
     return this.articleRepository.save(article);
+  }
+
+  public async getFeed(
+    type: feedType = feedType.popular,
+    page = 1,
+    limit = 10,
+  ) {
+    const skip = (page - 1) * limit;
+    let order: FindOptionsOrder<Article>;
+
+    switch (type) {
+      case feedType.latest:
+        order = {
+          createdAt: 'DESC',
+        };
+        break;
+      default:
+        order = {
+          votes: {},
+        };
+        break;
+    }
+
+    return this.articleRepository.find({
+      order,
+      skip,
+      take: limit,
+    });
   }
 
   public async update(

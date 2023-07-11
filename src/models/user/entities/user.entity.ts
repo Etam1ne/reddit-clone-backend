@@ -9,6 +9,7 @@ import { Comment } from 'src/models/comment/entities/comment.entity';
 import { Article } from 'src/models/article/entities/article.entity';
 import { Community } from 'src/models/community/entities/community.entity';
 import { Log } from 'src/common/enities/log.entity';
+import { Vote } from 'src/models/vote/entities/vote.entity';
 
 @Entity('users')
 export class User extends Log {
@@ -32,4 +33,7 @@ export class User extends Log {
 
   @ManyToMany(() => Community, (community) => community.followers)
   followedCommunities: Community[];
+
+  @OneToMany(() => Vote, (vote) => vote.user)
+  votes: Vote[];
 }

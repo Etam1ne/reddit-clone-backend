@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { Vote } from './vote.entity';
 import { Comment } from 'src/models/comment/entities/comment.entity';
 
@@ -10,4 +10,7 @@ export class CommentVote extends Vote {
     foreignKeyConstraintName: 'fk_comment_vote_id',
   })
   comment: Comment;
+
+  @OneToOne(() => Vote, (vote) => vote.commentVote)
+  vote: Vote;
 }
