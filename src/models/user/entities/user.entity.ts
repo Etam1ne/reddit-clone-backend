@@ -16,8 +16,8 @@ export class User extends Log {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 16 })
-  username: string;
+  @Column({ type: 'varchar', length: 16, name: 'username' })
+  name: string;
 
   @Column({ unique: true })
   email: string;

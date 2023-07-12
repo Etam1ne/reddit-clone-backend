@@ -11,6 +11,10 @@ export class ArticleVote extends Vote {
   })
   article: Article;
 
-  @OneToOne(() => Vote, (vote) => vote.commentVote)
+  @OneToOne(() => Vote)
+  @JoinColumn({
+    name: 'vote_id',
+    foreignKeyConstraintName: 'fk_articlevote_vote_id',
+  })
   vote: Vote;
 }

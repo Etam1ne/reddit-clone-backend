@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
@@ -15,7 +14,6 @@ import { CreateArticleDto } from 'src/common/dtos/create-article.dto';
 import { UpdateArticleDto } from 'src/common/dtos/update-article.dto';
 import { ArticleService } from './article.service';
 import { ApiTags } from '@nestjs/swagger';
-import { feedType } from 'src/common/types/feed-type.enum';
 
 @ApiTags('Articles')
 @Controller('articles')
@@ -31,9 +29,8 @@ export class ArticleController {
   public getFeed(
     @Query('page', ParseIntPipe) page?: number,
     @Query('limit', ParseIntPipe) limit?: number,
-    @Query('type', ParseEnumPipe<feedType>) type?: feedType,
   ) {
-    return this.service.getFeed(type, page, limit);
+    return this.service.getLatestFeed(page, limit);
   }
 
   @Put(':articleId')

@@ -13,6 +13,7 @@ export const mockUser: User = {
   comments: [],
   articles: [],
   followedCommunities: [],
+  votes: [],
 
   createdAt: faker.date.anytime(),
   updatedAt: faker.date.anytime(),

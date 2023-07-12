@@ -5,10 +5,8 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToOne,
+  JoinColumn,
 } from 'typeorm';
-import { CommentVote } from './comment-vote.entity';
-import { ArticleVote } from './article-vote.entity';
 
 @Entity({ name: 'votes' })
 export class Vote {
@@ -16,6 +14,10 @@ export class Vote {
   id: string;
 
   @ManyToOne(() => User, (user) => user.votes)
+  @JoinColumn({
+    name: 'user_id',
+    foreignKeyConstraintName: 'fk_voted_user_id',
+  })
   user: User;
 
   @Column({ name: 'is_positive', type: 'boolean' })
@@ -23,10 +25,4 @@ export class Vote {
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
-
-  @OneToOne(() => CommentVote, (commentVote) => commentVote.vote)
-  commentVote: CommentVote;
-
-  @OneToOne(() => ArticleVote, (articleVote) => articleVote.vote)
-  articleVote: ArticleVote;
 }
