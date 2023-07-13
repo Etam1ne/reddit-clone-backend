@@ -10,7 +10,7 @@ import {
 
 @Entity({ name: 'votes' })
 export class Vote {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ManyToOne(() => User, (user) => user.votes)

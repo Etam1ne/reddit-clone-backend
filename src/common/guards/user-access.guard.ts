@@ -25,7 +25,8 @@ export class UserAccessGuard extends AuthGuard('jwt') {
     if (!token) throw new UnauthorizedException();
 
     const userId = this.extractUserIdFromJwtToken(token);
-    const resourseId = request.params.userId;
+    const resourseId =
+      request.params.userId ?? request.query.userId ?? request.body.userId;
 
     return userId === resourseId;
   }

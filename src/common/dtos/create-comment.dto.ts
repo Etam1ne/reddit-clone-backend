@@ -1,12 +1,12 @@
-import { IsNumber, IsOptional, IsString, IsNotEmpty } from 'class-validator';
+import { IsOptional, IsString, IsNotEmpty, IsUUID } from 'class-validator';
 
 export class CreateCommentDto {
   @IsNotEmpty()
-  @IsNumber()
+  @IsUUID()
   public readonly userId: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsUUID()
   public readonly articleId: string;
 
   @IsNotEmpty()
@@ -14,6 +14,6 @@ export class CreateCommentDto {
   public readonly content: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsUUID()
   public readonly commentId?: string;
 }

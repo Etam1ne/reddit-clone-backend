@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, FindOptionsOrder, Repository } from 'typeorm';
 import { Article } from './entities/article.entity';
 import { CreateArticleDto } from 'src/common/dtos/create-article.dto';
 import { UpdateArticleDto } from 'src/common/dtos/update-article.dto';
@@ -8,6 +8,7 @@ import { IFullArticle } from 'src/common/interfaces/full-article.interface';
 import { Comment } from '../comment/entities/comment.entity';
 import { ArticleVote } from '../vote/entities/article-vote.entity';
 import { VoteService } from '../vote/vote.service';
+import { feedType } from 'src/common/types/feed-type.enum';
 
 @Injectable()
 export class ArticleService {
@@ -30,13 +31,15 @@ export class ArticleService {
     return this.articleRepository.save(article);
   }
 
-  public async getLatestFeed(page = 1, limit = 10): Promise<IFullArticle[]> {
+  public async getFeed(
+    order: FindOptionsOrder<Article>,
+    page = 1,
+    limit = 10,
+  ): Promise<IFullArticle[]> {
     const skip = (page - 1) * limit;
 
     const articles = await this.articleRepository.find({
-      order: {
-        createdAt: 'DESC',
-      },
+      order,
       skip,
       take: limit,
       relations: ['community', 'user'],
@@ -50,8 +53,9 @@ export class ArticleService {
         );
         const [comments, commentsNumber] =
           await this.commentRepository.findAndCount({ where: { article } });
+        const { user, community, ...other } = article;
         return {
-          ...article,
+          ...other,
           countedVotes,
           commentsNumber,
           username: article.user.name,

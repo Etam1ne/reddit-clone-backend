@@ -8,14 +8,15 @@ import { VoteArticleDto } from 'src/common/dtos/vote-article.dto';
 export class VoteController {
   constructor(private readonly service: VoteService) {}
 
+  @UseGuards(UserAccessGuard)
   @Post('comment')
   @UseGuards(UserAccessGuard)
   public voteComment(@Body() voteCommentDto: VoteCommentDto) {
     return this.service.voteComment(voteCommentDto);
   }
 
-  @Post('article')
   @UseGuards(UserAccessGuard)
+  @Post('article')
   public voteArticle(@Body() voteArticleDto: VoteArticleDto) {
     return this.service.voteArticle(voteArticleDto);
   }
