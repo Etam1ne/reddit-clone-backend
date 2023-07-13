@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentDto } from 'src/common/dtos/create-comment.dto';
 import { Article } from '../article/entities/article.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserPayload } from 'src/common/types/user-payload.type';
 
 @Injectable()
 export class CommentService {
@@ -29,11 +30,14 @@ export class CommentService {
     });
   }
 
-  public async create(createCommentDto: CreateCommentDto): Promise<Comment> {
+  public async create(
+    createCommentDto: CreateCommentDto,
+    user: UserPayload,
+  ): Promise<Comment> {
     const comment = this.commentRepository.create({
       ...createCommentDto,
       article: { id: createCommentDto.articleId },
-      user: { id: createCommentDto.userId },
+      user: { id: user.sub },
     });
 
     if (createCommentDto.commentId) {
@@ -47,7 +51,14 @@ export class CommentService {
     return this.commentRepository.save(comment);
   }
 
-  public async delete(commentId: string): Promise<DeleteResult> {
-    return this.commentRepository.delete({ id: commentId });
+  public async delete(commentId: string, user: UserPayload): Promise<boolean> {
+    const deleteResult = await this.commentRepository.delete({
+      id: commentId,
+      user: { id: user.sub },
+    });
+
+    if (deleteResult.affected === 0) throw new NotFoundException();
+
+    return true;
   }
 }

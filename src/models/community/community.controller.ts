@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { DeleteResult } from 'typeorm';
 import { CommunityService } from './community.service';
@@ -16,15 +17,22 @@ import { Community } from './entities/community.entity';
 import { User } from '../user/entities/user.entity';
 import { Article } from '../article/entities/article.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { UserPayload } from 'src/common/types/user-payload.type';
 
 @ApiTags('Communities')
 @Controller('communities')
 export class CommunityController {
   constructor(private readonly service: CommunityService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  public create(@Body() body: CreateCommunityDto): Promise<Community> {
-    return this.service.create(body);
+  public create(
+    @CurrentUser() user: UserPayload,
+    @Body() body: CreateCommunityDto,
+  ): Promise<Community> {
+    return this.service.create(body, user);
   }
 
   @Get()

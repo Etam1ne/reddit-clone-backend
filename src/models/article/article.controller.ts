@@ -15,17 +15,22 @@ import { UpdateArticleDto } from 'src/common/dtos/update-article.dto';
 import { ArticleService } from './article.service';
 import { ApiTags } from '@nestjs/swagger';
 import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
-import { UserAccessGuard } from 'src/common/guards/user-access.guard';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { UserPayload } from 'src/common/types/user-payload.type';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 
 @ApiTags('Articles')
 @Controller('articles')
 export class ArticleController {
   constructor(private readonly service: ArticleService) {}
 
-  @UseGuards(UserAccessGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
-  public create(@Body() createArticleDto: CreateArticleDto) {
-    return this.service.create(createArticleDto);
+  public create(
+    @CurrentUser() user: UserPayload,
+    @Body() createArticleDto: CreateArticleDto,
+  ) {
+    return this.service.create(createArticleDto, user);
   }
 
   @Get('feed/latest')
@@ -36,16 +41,22 @@ export class ArticleController {
     return this.service.getFeed({ createdAt: 'DESC' }, page, limit);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put(':articleId')
   public update(
+    @CurrentUser() user: UserPayload,
     @Param('articleId', ParseUUIDPipe) articleId: string,
     @Body() updatePostDto: UpdateArticleDto,
   ) {
-    return this.service.update(articleId, updatePostDto);
+    return this.service.update(articleId, updatePostDto, user);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':articleId')
-  public delete(@Param('articleId', ParseUUIDPipe) articleId: string) {
-    return this.service.delete(articleId);
+  public delete(
+    @CurrentUser() user: UserPayload,
+    @Param('articleId', ParseUUIDPipe) articleId: string,
+  ) {
+    return this.service.delete(articleId, user);
   }
 }

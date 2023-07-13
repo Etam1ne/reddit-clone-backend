@@ -34,8 +34,10 @@ export class AuthService {
     const user = await this.userService.getByEmail(signInDto.email);
 
     const payload = {
-      sub: user.id,
-      email: user.email,
+      user: {
+        sub: user.id,
+        email: user.email,
+      },
     };
 
     return {

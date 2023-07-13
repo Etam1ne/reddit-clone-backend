@@ -1,10 +1,6 @@
-import { IsOptional, IsString, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateCommunityDto {
-  @IsNotEmpty()
-  @IsUUID()
-  public readonly userId: string;
-
   @IsNotEmpty()
   @IsString()
   public readonly name: string;

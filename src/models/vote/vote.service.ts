@@ -9,6 +9,7 @@ import { Article } from '../article/entities/article.entity';
 import { Vote } from './entities/vote.entity';
 import { ArticleVote } from './entities/article-vote.entity';
 import { CommentVote } from './entities/comment-vote.entity';
+import { UserPayload } from 'src/common/types/user-payload.type';
 
 @Injectable()
 export class VoteService {
@@ -27,12 +28,11 @@ export class VoteService {
     private readonly commentVoteRepository: Repository<CommentVote>,
   ) {}
 
-  public async voteComment({
-    userId,
-    commentId,
-    isPositive,
-  }: VoteCommentDto): Promise<CommentVote> {
-    const vote = await this.createVote(userId, isPositive);
+  public async voteComment(
+    { commentId, isPositive }: VoteCommentDto,
+    user: UserPayload,
+  ): Promise<CommentVote> {
+    const vote = await this.createVote(user.sub, isPositive);
     const comment = await this.commentRepository.findOne({
       where: { id: commentId },
     });
@@ -41,12 +41,11 @@ export class VoteService {
     return this.commentVoteRepository.save(commentVote);
   }
 
-  public async voteArticle({
-    userId,
-    articleId,
-    isPositive,
-  }: VoteArticleDto): Promise<ArticleVote> {
-    const vote = await this.createVote(userId, isPositive);
+  public async voteArticle(
+    { articleId, isPositive }: VoteArticleDto,
+    user: UserPayload,
+  ): Promise<ArticleVote> {
+    const vote = await this.createVote(user.sub, isPositive);
     const article = await this.articleRepository.findOne({
       where: { id: articleId },
     });

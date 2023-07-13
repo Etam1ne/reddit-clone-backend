@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { DeleteResult, FindOptionsOrder, Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { FindOptionsOrder, Repository } from 'typeorm';
 import { Article } from './entities/article.entity';
 import { CreateArticleDto } from 'src/common/dtos/create-article.dto';
 import { UpdateArticleDto } from 'src/common/dtos/update-article.dto';
@@ -8,7 +8,7 @@ import { IFullArticle } from 'src/common/interfaces/full-article.interface';
 import { Comment } from '../comment/entities/comment.entity';
 import { ArticleVote } from '../vote/entities/article-vote.entity';
 import { VoteService } from '../vote/vote.service';
-import { feedType } from 'src/common/types/feed-type.enum';
+import { UserPayload } from 'src/common/types/user-payload.type';
 
 @Injectable()
 export class ArticleService {
@@ -22,10 +22,10 @@ export class ArticleService {
     private readonly articleVoteRepository: Repository<ArticleVote>,
   ) {}
 
-  public async create(createArticleDto: CreateArticleDto) {
+  public async create(createArticleDto: CreateArticleDto, user: UserPayload) {
     const article = this.articleRepository.create({
       ...createArticleDto,
-      user: { id: createArticleDto.userId },
+      user: { id: user.sub },
       community: { id: createArticleDto.communityId },
     });
     return this.articleRepository.save(article);
@@ -70,13 +70,24 @@ export class ArticleService {
   public async update(
     articleId: string,
     updateArticleDto: UpdateArticleDto,
+    user: UserPayload,
   ): Promise<Article> {
-    await this.articleRepository.update({ id: articleId }, updateArticleDto);
+    await this.articleRepository.update(
+      { id: articleId, user: { id: user.sub } },
+      updateArticleDto,
+    );
 
     return this.articleRepository.findOne({ where: { id: articleId } });
   }
 
-  public delete(articleId: string): Promise<DeleteResult> {
-    return this.articleRepository.delete({ id: articleId });
+  public async delete(articleId: string, user: UserPayload): Promise<boolean> {
+    const deleteResult = await this.articleRepository.delete({
+      id: articleId,
+      user: { id: user.sub },
+    });
+
+    if (deleteResult.affected === 0) throw new NotFoundException();
+
+    return true;
   }
 }

@@ -6,13 +6,17 @@ import { CreateCommunityDto } from 'src/common/dtos/create-community.dto';
 import { UpdateCommunityDto } from 'src/common/dtos/update-community.dto';
 import { User } from '../user/entities/user.entity';
 import { Article } from '../article/entities/article.entity';
+import { UserPayload } from 'src/common/types/user-payload.type';
 
 @Injectable()
 export class CommunityService {
   @InjectRepository(Community)
   private readonly communityRepository: Repository<Community>;
 
-  public create(createCommunityDto: CreateCommunityDto): Promise<Community> {
+  public create(
+    createCommunityDto: CreateCommunityDto,
+    user: UserPayload,
+  ): Promise<Community> {
     const community = this.communityRepository.create(createCommunityDto);
 
     return this.communityRepository.save(community);

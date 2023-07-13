@@ -15,9 +15,5 @@ export class CreateArticleDto {
 
   @IsNotEmpty()
   @IsUUID()
-  public readonly userId: string;
-
-  @IsNotEmpty()
-  @IsUUID()
   public readonly communityId: string;
 }

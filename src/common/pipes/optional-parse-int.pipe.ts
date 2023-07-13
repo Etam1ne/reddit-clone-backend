@@ -1,4 +1,4 @@
-import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
+import { PipeTransform } from '@nestjs/common';
 
 export class OptionalParseIntPipe implements PipeTransform<string | undefined> {
   transform(value: string | undefined): number | undefined {

@@ -3,10 +3,6 @@ import { IsOptional, IsString, IsNotEmpty, IsUUID } from 'class-validator';
 export class CreateCommentDto {
   @IsNotEmpty()
   @IsUUID()
-  public readonly userId: string;
-
-  @IsNotEmpty()
-  @IsUUID()
   public readonly articleId: string;
 
   @IsNotEmpty()

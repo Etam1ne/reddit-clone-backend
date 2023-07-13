@@ -11,19 +11,23 @@ import {
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from 'src/common/dtos/create-comment.dto';
 import { Comment } from './entities/comment.entity';
-import { DeleteResult } from 'typeorm';
 import { ApiTags } from '@nestjs/swagger';
-import { UserAccessGuard } from 'src/common/guards/user-access.guard';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { UserPayload } from 'src/common/types/user-payload.type';
 
 @ApiTags('Comments')
 @Controller('comments')
 export class CommentController {
   constructor(private readonly service: CommentService) {}
 
-  @UseGuards(UserAccessGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
-  public create(@Body() createCommentDto: CreateCommentDto): Promise<Comment> {
-    return this.service.create(createCommentDto);
+  public create(
+    @CurrentUser() user: UserPayload,
+    @Body() createCommentDto: CreateCommentDto,
+  ): Promise<Comment> {
+    return this.service.create(createCommentDto, user);
   }
 
   @Get(':articleId')
@@ -33,10 +37,12 @@ export class CommentController {
     return this.service.getByArticle(articleId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':commentId')
   public delete(
+    @CurrentUser() user: UserPayload,
     @Param('commentId', ParseUUIDPipe) commentId: string,
-  ): Promise<DeleteResult> {
-    return this.service.delete(commentId);
+  ): Promise<boolean> {
+    return this.service.delete(commentId, user);
   }
 }
