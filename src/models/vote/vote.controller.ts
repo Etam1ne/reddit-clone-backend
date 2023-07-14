@@ -5,8 +5,10 @@ import { VoteArticleDto } from 'src/common/dtos/vote-article.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { UserPayload } from 'src/common/types/user-payload.type';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('vote')
+@ApiTags('Votes')
+@Controller('votes')
 export class VoteController {
   constructor(private readonly service: VoteService) {}
 

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Optional,
   Param,
   ParseUUIDPipe,
   Post,
@@ -13,7 +14,7 @@ import {
 import { CreateArticleDto } from 'src/common/dtos/create-article.dto';
 import { UpdateArticleDto } from 'src/common/dtos/update-article.dto';
 import { ArticleService } from './article.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
 import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { UserPayload } from 'src/common/types/user-payload.type';
@@ -38,7 +39,29 @@ export class ArticleController {
     @Query('page', OptionalParseIntPipe) page?: number,
     @Query('limit', OptionalParseIntPipe) limit?: number,
   ) {
-    return this.service.getFeed({ createdAt: 'DESC' }, page, limit);
+    return this.service.getLatestFeed(page, limit);
+  }
+
+  @Get('feed/popular')
+  public getPopularFeed(
+    @Query('page', OptionalParseIntPipe) page?: number,
+    @Query('limit', OptionalParseIntPipe) limit?: number,
+  ) {
+    return this.service.getPopularFeed(page, limit);
+  }
+  @Get('feed/positive')
+  public getPositiveFeed(
+    @Query('page', OptionalParseIntPipe) page?: number,
+    @Query('limit', OptionalParseIntPipe) limit?: number,
+  ) {
+    return this.service.getPositiveFeed(page, limit);
+  }
+  @Get('feed/negative')
+  public getNegativeFeed(
+    @Query('page', OptionalParseIntPipe) page?: number,
+    @Query('limit', OptionalParseIntPipe) limit?: number,
+  ) {
+    return this.service.getNegativeFeed(page, limit);
   }
 
   @UseGuards(JwtAuthGuard)

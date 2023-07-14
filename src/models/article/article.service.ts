@@ -22,7 +22,7 @@ export class ArticleService {
     private readonly articleVoteRepository: Repository<ArticleVote>,
   ) {}
 
-  public async create(createArticleDto: CreateArticleDto, user: UserPayload) {
+  public async create(createArticleDto: CreateArticleDto, user: UserPayload): Promise<Article> {
     const article = this.articleRepository.create({
       ...createArticleDto,
       user: { id: user.sub },
@@ -31,20 +31,85 @@ export class ArticleService {
     return this.articleRepository.save(article);
   }
 
-  public async getFeed(
-    order: FindOptionsOrder<Article>,
-    page = 1,
-    limit = 10,
+  public async getPositiveFeed(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<IFullArticle[]> {
+    const skip = (page - 1) * limit;
+
+    const articles = await this.articleRepository
+    .createQueryBuilder('article')
+    .leftJoinAndSelect('article.user', 'user')
+    .leftJoinAndSelect('article.community', 'community')
+    .leftJoin('article.votes', 'vote')
+    .groupBy('article.id, vote.id, user.id, community.id')
+    .orderBy('SUM(CASE WHEN vote.isPositive = true THEN 1 ELSE -1 END)', 'DESC')
+    .skip(skip)
+    .limit(limit)
+    .getMany();
+
+    return this.returnFullArticles(articles);
+  }
+
+  public async getNegativeFeed(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<IFullArticle[]> {
+    const skip = (page - 1) * limit;
+
+    const articles = await this.articleRepository
+    .createQueryBuilder('article')
+    .leftJoinAndSelect('article.user', 'user')
+    .leftJoinAndSelect('article.community', 'community')
+    .leftJoin('article.votes', 'vote')
+    .groupBy('article.id, vote.id, user.id, community.id')
+    .orderBy('SUM(CASE WHEN vote.isPositive = true THEN 1 ELSE -1 END)', 'ASC')
+    .skip(skip)
+    .limit(limit)
+    .getMany();
+
+    return this.returnFullArticles(articles);
+  }
+
+  public async getPopularFeed(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<IFullArticle[]> {
+    const skip = (page - 1) * limit;
+
+    const articles = await this.articleRepository
+    .createQueryBuilder('article')
+    .leftJoinAndSelect('article.user', 'user')
+    .leftJoinAndSelect('article.community', 'community')
+    .leftJoin('article.votes', 'vote')
+    .groupBy('article.id, vote.id, user.id, community.id')
+    .orderBy('COUNT(vote)', 'DESC')
+    .skip(skip)
+    .limit(limit)
+    .getMany();
+
+    return this.returnFullArticles(articles);
+  }
+  
+  public async getLatestFeed(
+    page: number = 1,
+    limit: number = 10,
   ): Promise<IFullArticle[]> {
     const skip = (page - 1) * limit;
 
     const articles = await this.articleRepository.find({
-      order,
+      order: {
+        createdAt: 'DESC',
+      },
       skip,
       take: limit,
-      relations: ['community', 'user'],
-    });
+      relations: ['user', 'community']
+    })
 
+    return this.returnFullArticles(articles);
+  }
+  
+  private async returnFullArticles(articles: Article[]): Promise<IFullArticle[]> {
     const fullArticles = articles.map(
       async (article): Promise<IFullArticle> => {
         const countedVotes = await this.voteService.countVotes(
@@ -63,7 +128,7 @@ export class ArticleService {
         };
       },
     );
-
+  
     return Promise.all(fullArticles);
   }
 

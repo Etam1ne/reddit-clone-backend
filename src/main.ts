@@ -14,7 +14,7 @@ async function bootstrap() {
     .setDescription('The api for reddit clone application')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('', app, document);
 
   await app.listen(process.env.PORT, () => {
     console.log('[WEB]', `http://localhost:${process.env.PORT}`);
