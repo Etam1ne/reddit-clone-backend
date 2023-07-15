@@ -13,7 +13,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   public signIn(@Body() signInDto: SignInDto) {
-    return this.authService.login(signInDto);
+    return this.authService.signIn(signInDto);
   }
 
   @Post('signup')

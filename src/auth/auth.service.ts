@@ -27,10 +27,10 @@ export class AuthService {
     }
 
     await this.userService.create(signUpDto);
-    return await this.login(signUpDto);
+    return await this.signIn(signUpDto);
   }
 
-  public async login(signInDto: SignInDto) {
+  public async signIn(signInDto: SignInDto) {
     const user = await this.userService.getByEmail(signInDto.email);
 
     const payload = {

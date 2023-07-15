@@ -31,7 +31,7 @@ import { Vote } from 'src/models/vote/entities/vote.entity';
       migrations: ['dist/infra/postgres/migrations/*.{ts,js}'],
       migrationsTableName: 'typeorm_migrations',
       logger: 'file',
-      synchronize: true,
+      synchronize: false,
     }),
   ],
 })
