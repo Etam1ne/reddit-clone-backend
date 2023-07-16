@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  Optional,
   Param,
   ParseUUIDPipe,
   Post,
@@ -14,7 +13,7 @@ import {
 import { CreateArticleDto } from 'src/common/dtos/create-article.dto';
 import { UpdateArticleDto } from 'src/common/dtos/update-article.dto';
 import { ArticleService } from './article.service';
-import { ApiPropertyOptional, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { OptionalParseIntPipe } from 'src/common/pipes/optional-parse-int.pipe';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { UserPayload } from 'src/common/types/user-payload.type';

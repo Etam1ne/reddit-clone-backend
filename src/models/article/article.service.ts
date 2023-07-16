@@ -1,5 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { FindOptionsOrder, Repository } from 'typeorm';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { Article } from './entities/article.entity';
 import { CreateArticleDto } from 'src/common/dtos/create-article.dto';
 import { UpdateArticleDto } from 'src/common/dtos/update-article.dto';
@@ -9,6 +9,8 @@ import { Comment } from '../comment/entities/comment.entity';
 import { ArticleVote } from '../vote/entities/article-vote.entity';
 import { VoteService } from '../vote/vote.service';
 import { UserPayload } from 'src/common/types/user-payload.type';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class ArticleService {
@@ -20,9 +22,13 @@ export class ArticleService {
     private readonly commentRepository: Repository<Comment>,
     @InjectRepository(ArticleVote)
     private readonly articleVoteRepository: Repository<ArticleVote>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
-  public async create(createArticleDto: CreateArticleDto, user: UserPayload): Promise<Article> {
+  public async create(
+    createArticleDto: CreateArticleDto,
+    user: UserPayload,
+  ): Promise<Article> {
     const article = this.articleRepository.create({
       ...createArticleDto,
       user: { id: user.sub },
@@ -31,85 +37,75 @@ export class ArticleService {
     return this.articleRepository.save(article);
   }
 
-  public async getPositiveFeed(
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<IFullArticle[]> {
-    const skip = (page - 1) * limit;
-
-    const articles = await this.articleRepository
-    .createQueryBuilder('article')
-    .leftJoinAndSelect('article.user', 'user')
-    .leftJoinAndSelect('article.community', 'community')
-    .leftJoin('article.votes', 'vote')
-    .groupBy('article.id, vote.id, user.id, community.id')
-    .orderBy('SUM(CASE WHEN vote.isPositive = true THEN 1 ELSE -1 END)', 'DESC')
-    .skip(skip)
-    .limit(limit)
-    .getMany();
-
-    return this.returnFullArticles(articles);
-  }
-
-  public async getNegativeFeed(
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<IFullArticle[]> {
-    const skip = (page - 1) * limit;
-
-    const articles = await this.articleRepository
-    .createQueryBuilder('article')
-    .leftJoinAndSelect('article.user', 'user')
-    .leftJoinAndSelect('article.community', 'community')
-    .leftJoin('article.votes', 'vote')
-    .groupBy('article.id, vote.id, user.id, community.id')
-    .orderBy('SUM(CASE WHEN vote.isPositive = true THEN 1 ELSE -1 END)', 'ASC')
-    .skip(skip)
-    .limit(limit)
-    .getMany();
-
-    return this.returnFullArticles(articles);
-  }
-
-  public async getPopularFeed(
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<IFullArticle[]> {
-    const skip = (page - 1) * limit;
-
-    const articles = await this.articleRepository
-    .createQueryBuilder('article')
-    .leftJoinAndSelect('article.user', 'user')
-    .leftJoinAndSelect('article.community', 'community')
-    .leftJoin('article.votes', 'vote')
-    .groupBy('article.id, vote.id, user.id, community.id')
-    .orderBy('COUNT(vote)', 'DESC')
-    .skip(skip)
-    .limit(limit)
-    .getMany();
-
-    return this.returnFullArticles(articles);
+  public async getPositiveFeed(page = 1, limit = 10): Promise<IFullArticle[]> {
+    const cacheKey = `positiveFeed:${page}:${limit}`;
+    const sort = 'SUM(CASE WHEN vote.isPositive = true THEN 1 ELSE -1 END)';
+  
+    return this.getFeed(page, limit, cacheKey, sort);
   }
   
-  public async getLatestFeed(
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<IFullArticle[]> {
-    const skip = (page - 1) * limit;
-
-    const articles = await this.articleRepository.find({
-      order: {
-        createdAt: 'DESC',
-      },
-      skip,
-      take: limit,
-      relations: ['user', 'community']
-    })
-
-    return this.returnFullArticles(articles);
+  public async getNegativeFeed(page = 1, limit = 10): Promise<IFullArticle[]> {
+    const cacheKey = `negativeFeed:${page}:${limit}`;
+    const sort = 'SUM(CASE WHEN vote.isPositive = true THEN 1 ELSE -1 END)';
+  
+    return this.getFeed(page, limit, cacheKey, sort, 'ASC');
   }
   
-  private async returnFullArticles(articles: Article[]): Promise<IFullArticle[]> {
+  public async getPopularFeed(page = 1, limit = 10): Promise<IFullArticle[]> {
+    const cacheKey = `popularFeed:${page}:${limit}`;
+    const sort = 'COUNT(vote)';
+  
+    return this.getFeed(page, limit, cacheKey, sort);
+  }
+  
+  public async getLatestFeed(page = 1, limit = 10): Promise<IFullArticle[]> {
+    const cacheKey = `latestFeed:${page}:${limit}`;
+    const sort = 'article.created_at';
+  
+    return this.getFeed(page, limit, cacheKey, sort);
+  }
+
+  private async getFeed(
+    page: number,
+    limit: number,
+    cacheKey: string,
+    sort: string,
+    order?: "DESC" | "ASC",
+    additionalQueryOptions?: any
+  ): Promise<IFullArticle[]> {
+    const cachedArticles: IFullArticle[] = await this.cacheManager.get(cacheKey);
+    if (cachedArticles) {
+      return cachedArticles;
+    }
+  
+    const skip: number = (page - 1) * limit;
+  
+    const queryBuilder = this.articleRepository
+      .createQueryBuilder('article')
+      .leftJoinAndSelect('article.user', 'user')
+      .leftJoinAndSelect('article.community', 'community')
+      .leftJoin('article.votes', 'vote')
+      .groupBy('article.id, vote.id, user.id, community.id')
+      .orderBy(sort, order)
+      .skip(skip)
+      .limit(limit);
+  
+    if (additionalQueryOptions) {
+      queryBuilder.andWhere(additionalQueryOptions);
+    }
+  
+    const articles: Article[] = await queryBuilder.getMany();
+    const fullArticles: IFullArticle[] = await this.returnFullArticles(articles);
+    const ttl: number = 600 * 1000;
+  
+    this.cacheManager.set(cacheKey, fullArticles, ttl);
+  
+    return fullArticles;
+  }
+
+  private async returnFullArticles(
+    articles: Article[],
+  ): Promise<IFullArticle[]> {
     const fullArticles = articles.map(
       async (article): Promise<IFullArticle> => {
         const countedVotes = await this.voteService.countVotes(
@@ -128,7 +124,7 @@ export class ArticleService {
         };
       },
     );
-  
+
     return Promise.all(fullArticles);
   }
 
